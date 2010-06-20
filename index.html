@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <title>dead inventors</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <h1>Scientists and their influencers</h1>
+    
+    <div id=demo></div>
+	<script type="text/template" id=person>
+		<h2><%= name.value %></h2>
+		<img src="<%= depiction.value %>">
+		<p><%= abstract.value %>
+	</script>
+
+    <script src="jquery.js"></script>
+    <script src="scientists.js"></script>
+    <script>
+        scientists.init();
+    </script>
+</body>
+</html>
