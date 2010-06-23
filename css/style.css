@@ -1,8 +1,8 @@
 /* Revolutionaries: http://dharmfly.com/revolutionaries */
-/* CSS stylesheet by @yaili & @goodonpaper */
+/* Visual design & CSS stylesheet by @yaili & @goodonpaper - extended by @premasagar */
 
 body {
-	background: #000 url('../img/default_bg.png');
+	background: #000 url('../img/isaac.png');
 	color: #fff;
 	font-family: 'Palatino','Baskerville','Georgia',serif;
 	font-size: 14px;
@@ -94,17 +94,8 @@ body {
 		margin-bottom: 30px;
 	}
 	
-	#content p {
-		margin-bottom: 20px;
-	}
-	
-	.influences {
-		overflow: hidden;
-	}
-	
-	.influences li {
-		float: left;
-		margin-right: 20px;
+	#content h2 a {
+	    color:#fff;
 	}
 	
 	#content h3 {
@@ -116,11 +107,39 @@ body {
 		margin-top: 40px;
 	}
 	
-	.influences h4 {
+	#content p {
+		margin-bottom: 20px;
+		font-size:1.62em;
+		line-height:1.62em;
+	}
+	
+	#related div ul {
+		overflow: hidden;
+	}
+	
+	#related div li {
+		float: left;
+		margin: 0 20px 20px 0;
+	}
+	
+	#related div li h4 {
 		font-weight: bold;
 	}
 	
-	.influences li img {
+	#related div li h4 a {
+		color: #fff;
+	}
+	
+	#related div li a.photo-container {
+	    display: block;
+	    height: 138px;
+	}
+	
+	#related div li img.photo {
 		width: 90px;
 		border: 5px solid #fff;
+		max-height:138px;
+	}
+	#related div li img.photo[src=""] {
+		display:none;
 	}

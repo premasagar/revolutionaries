@@ -25,104 +25,6 @@
             <li class="next">Next &rarr;<br>Article title</li>
         </ul>
     </div>
-    
-	
-	
-	
-<!--	
-	<div id="content">
-        <h2>Isaac Newton</h2>
-	    <p><img src="http://img.freebase.com/api/trans/raw/wikipedia/images/commons_id/37337" width=204 height=279>
-
-        <p>Sir Isaac Newton FRS (4 January 1643 – 31 March 1727 [OS: 25 December 1642 – 20 March 1726]) was an English physicist, mathematician, astronomer, natural philosopher, alchemist, and theologian who is considered by many scholars and members of the general public to be one of the most influential people in human history. His 1687 publication of the Philosophiæ Naturalis Principia Mathematica (usually called the Principia) is considered to be among the most influential books in the history of science, laying the groundwork for most of classical mechanics.</p>
-    
-        <h3>Related objects:</h3>
-        <ul class="influences">  
-            <li>
-                <img src="http://collectionsonline.nmsi.ac.uk/grabimg.php?kv=107931">
-                <h4>Portrait</h4>
-            </li>
-            <li>
-                <img src="http://collectionsonline.nmsi.ac.uk/grabimg.php?kv=109011">
-                <h4>Reflecting telescope</h4>
-            </li>
-            <li>
-                <img src="http://collectionsonline.nmsi.ac.uk/grabimg.php?kv=126567">
-                <h4>Medal</h4>
-            </li>
-            <li>
-                <img src="http://collectionsonline.nmsi.ac.uk/grabimg.php?kv=107901">
-                <h4>Portrait</h4>
-            </li>
-            <li>
-                <img src="http://collectionsonline.nmsi.ac.uk/grabimg.php?kv=55342">
-                <h4>Spectacles</h4>
-            </li>
-            <li>
-                <img src="http://collectionsonline.nmsi.ac.uk/grabimg.php?kv=107052">
-                <h4>Furnace</h4>
-            </li>
-        </ul>
-
-        <h3>Inspired by:</h3>
-        <ul class="influences">  
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/7490745?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>René Descartes</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/113500?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Nicolaus Copernicus</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/146575?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Euclid</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/470711?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Johannes Kepler</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/543847?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Maimonides</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/44047?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Christiaan Huygens</h4>
-            </li>
-        </ul>
-
-        <h3>Inspiration to:</h3>
-        <ul class="influences">  
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/126437?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Ralph Waldo Emerson</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/637954?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Thomas Jefferson</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/23942?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Voltaire</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/31457?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>David Hume</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/en/230px_godel_einstein_1950_jpeg?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Kurt Gödel</h4>
-            </li>
-            <li>
-                <img src="http://img.freebase.com/api/trans/image_thumb/wikipedia/images/commons_id/925243?errorid=%2Ffreebase%2Fno_image_png&maxheight=200&mode=fit&maxwidth=150">
-                <h4>Albert Einstein</h4>
-            </li>
-        </ul>
-	</div>
-	-->
-	
-	
 	
 	
 	<!-- content -->
@@ -142,7 +44,7 @@
 	<script type="text/template" id="itemDetailTmpl">
 	    <div class="item-detail vcard">
 		    <h2><a class="fn url" href="<%= url %>"><%= name %></a></h2>
-	        <p><img src="<%= depiction %>"></p>
+	        <p><a class="photo-container" href="<%= url %>"><img src="<%= depiction %>" alt="<%= name %>"></a></p>
             <p><%= abstract %></p>
         </div>
 	</script>
@@ -150,21 +52,18 @@
 	<script type="text/template" id="itemSummaryTmpl">
 	    <div class="item-summary vcard">
 		    <h4><a class="fn url" href="<%= url %>"><%= name %></a></h4>
-		    <img class="photo" src="<%= depiction %>">
+		    <a class="photo-container" href="<%= url %>"></a>
 		</div>
 	</script>
 	
 	<script type="text/template" id="itemTmpl">
-	    <li><%= item %></li>
+	    <li class="<%= id %>"><%= item %></li>
 	</script>
 	
-	<!-- TODO: remove "influences" -->
 	<script type="text/template" id="itemsTmpl">
 	     <div class="<%= type %>">
 	        <h3><%= title %></h3>
-		    <ul class="influences">
-			    <%= items %>
-		    </ul>
+		    <ul></ul>
 		 </div>
 	</script>
 	
@@ -174,27 +73,23 @@
 	
 	
 	<!-- scripts -->
-
+    
+    <script src="console.js"></script>
     <script src="jquery.js"></script>
     <script src="revolutionaries.js"></script>
 	<script>
+	
 	var theDefault = 'isaac newton',
-	    _ = window.console && window.console.log ? window.console.log : function(){},
+	    api = revolutionaries,
 	    win = $(window),
 	    body = $('body'),
 	    side = $('#sidebar'),
 	    content = $('#content'),
-	    rev = $('#revolutionary'),
-	    rel = $('#related'),
+	    revolutionary = $('#revolutionary'),
+	    related = $('#related'),
 	    s = $('.search', side),
-	    h = body.height(),
-	    tmpl = revolutionaries.tmpl;
-	    
-	// sidebar height
-	side.height(h);
-	win.load(function(){
-		side.height(body.height());
-	});
+	    tmpl = revolutionaries.tmpl,
+	    influences, influencesList, influenced, influencedList;
 	
 	// searchbox behaviour
     s.focus(function(){
@@ -205,12 +100,31 @@
         s.val(val ? val : s.attr('title'));
     });
     
-    // initialise
-    revolutionaries.person(theDefault, function(data){
+    // sidebar height
+	function resetSidebarHeight(){
+	    var wh = win.height(),
+	        bh = body.height(),
+	        ch = content.height();
+	    
+	    side.height(Math.max(wh, bh, ch));
+	}
+    
+    // reset DOM
+    function clear(){
+        revolutionary.empty();
+        related.empty();
+        influences = null;    
+        influenced = null;
+	    resetSidebarHeight();
+    }
+    
+    // update display
+    function display(data){
+    
         var type = data.type,
-            items, container;
-            
-        _(theDefault, type, data);
+            items, container, item;           
+        
+        _(type, data.name, data.id, data);
         
         if (!type){
             return false;
@@ -220,42 +134,66 @@
         switch(type){
             // main subject
             case 'revolutionary':
-                rev.html(tmpl('itemDetailTmpl', data));
+                clear();
+                revolutionary.html(tmpl('itemDetailTmpl', data));
             break;
+            
+            
+            // detail for influences and influenced
+            case 'person-detail':
+                api.loadPhoto(
+                    data.thumbnail,
+                    data.name,
+                    function(){
+                        $(this).appendTo('.item-' + data.id + ' .photo-container', revolutionary);
+                	    resetSidebarHeight();
+                    }
+                );
+            break;
+            
             
             // influences
-            case 'influences':
-                items = '';
-                $.each(data.items, function(i, item){
-                    items += tmpl('itemTmpl', {item:tmpl('itemSummaryTmpl', item)});
+            case 'influence':
+                if (!influences){
+                    influences = $(tmpl('itemsTmpl', {type:type, title:'Influences'}))
+                        .appendTo(related);
+                    influencesList = influences.find('ul');
+                }
+                item = $(tmpl('itemTmpl', {id:'item-' + data.id, item:tmpl('itemSummaryTmpl', data)}));
+                item.find('a').click(function(){
+                    api.person(data.dbUrl, function(data){
+                        display(data);
+                    });
+                    return false;
                 });
-                items = tmpl('itemsTmpl', {type:type, items:items, title:'Influences'});
-                container = $('.' + type, rel);
-                if (container.length){
-                    container.replaceWith(items);
-                }
-                else {
-                    rel.append(items);
-                }
+                influencesList.append(item);
             break;
             
-            // those influenced
+            
+            // influenced
             case 'influenced':
-                items = '';
-                $.each(data.items, function(i, item){
-                    items += tmpl('itemTmpl', {item:tmpl('itemSummaryTmpl', item)});
+                if (!influenced){
+                    influenced = $(tmpl('itemsTmpl', {type:type, title:'Influenced'}))
+                        .appendTo(related);
+                    influencedList = influenced.find('ul');
+                }
+                item = $(tmpl('itemTmpl', {id:'item-' + data.id, item:tmpl('itemSummaryTmpl', data)}));
+                item.find('a').click(function(){
+                    api.person(data.dbUrl, function(data){
+                        display(data);
+                    });
+                    return false;
                 });
-                items = tmpl('itemsTmpl', {type:type, items:items, title:'Influenced'});
-                container = $('.' + type, rel);
-                if (container.length){
-                    container.replaceWith(items);
-                }
-                else {
-                    rel.append(items);
-                }
+                influencedList.append(item);
             break;
         }
-    });
+        
+        resetSidebarHeight();
+    }
+    
+    // initialise
+    resetSidebarHeight();
+    api.keyword(theDefault, display);
 	</script>
 	
 	<!-- end scripts -->

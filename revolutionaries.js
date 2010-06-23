@@ -3,18 +3,50 @@
 
 var revolutionaries = (function(){
 	
-	// GENERAL API
+	// CACHE
 	
-	function yql(query){
-		return 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(query) + '&format=json&callback=?'
+	// localStorage wrapper
+	function cache(key, value){
+	    var ns = 'revolutionaries';
+	    
+	    if (!localStorage || !JSON){
+	        return false;
+	    }
+	    key = ns + '.' + key;
+	    if (typeof value === 'undefined'){
+	        value = localStorage[key];
+	        return value ? JSON.parse(value).v : value;
+	    }
+	    else {
+	        localStorage[key] = JSON.stringify({
+	            v: value,
+	            t: new Date().getTime()
+	        });
+	    }
 	}
 	
+	// Caching layer for JSONP data
+	function jsonCache(url, callback){
+	    var cached = cache(url);
+	    if (cached){
+	        console.log('cached');
+	        callback(cached);
+	    }
+	    else {
+	        console.log('not cached');
+    	    jQuery.getJSON(url, function(data){
+    	        cache(url, data);
+    	        callback(data);
+    	    });
+    	}
+	}
 	
-	// HUMAN INTERFACE
+
+	// WIKIPEDIA / DBPEDIA
 	
 	function wikipedia(name, callback){
 		var url = "select url from search.web where query=\"site:en.wikipedia.org '" + name + "'\" LIMIT 1";
-		jQuery.getJSON(yql(url), function(data){
+		jsonCache(yql(url), function(data){
 			if (data && data.query && data.query.results && data.query.results.result && data.query.results.result.url){
 				callback(data.query.results.result.url);
 			}
@@ -29,24 +61,51 @@ var revolutionaries = (function(){
 	}
 	
 	function dbToWikiPediaUrl(url){
-		return url.replace('en.wikipedia.org/wiki', 'dbpedia.org/resource');
+		return url.replace('dbpedia.org/resource', 'en.wikipedia.org/wiki');
+	}
+	
+	function urlToId(url){
+	    return url.replace(/^.*\/(.*)$/, '$1')
+	        .toLowerCase()
+	        .replace(/[^a-z\-_]/g, '');
+	}
+	
+	function wikimediaAlternative(src){
+	    return src.replace('/en/', '/commons/');
+	}
+	
+	function wikimediaSize(src, size){
+	    return src.replace(/\d+px/, size + 'px');
 	}
 	
 	
-	// SPARQL WRAPPERS
+	// YQL & SPARQL	
+	
+	function yql(query){
+		return 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(query) + '&format=json&callback=?'
+	}
 	
 	function dbpediaQuery(sparql){
 		return 'http://dbpedia.org/sparql?query=' + encodeURIComponent(sparql) + '&format=json';
 	}
 	
+	function yqlSparqlQuery(sparql){
+		return "select results from json where url='" + dbpediaQuery(sparql) + "'";
+	}
+	
 	function yqlSparql(sparql){
-		return yql("select results from json where url='" + dbpediaQuery(sparql) + "'");
+	    var query = yqlSparqlQuery(sparql);
+		return yql(query);
+	}
+	
+	function yqlMulti(queries){ // NOTE: queries should use single quotes around values like urls
+		return yql('select * from query.multi where queries="' + queries.join(';') + '"');
 	}
 	
 	function dbpediaSparql(sparql, callback){
 	    var url = yqlSparql(sparql);
 		
-		jQuery.getJSON(url, function(data){
+		jsonCache(url, function(data){
 		    // TODO: clean this up by filtering on the YQL side of things
 			if (data && data.query && data.query.results && data.query.results.json && data.query.results.json.results.bindings && data.query.results.json.results.bindings){
 				callback(data.query.results.json.results.bindings);
@@ -58,9 +117,26 @@ var revolutionaries = (function(){
 	}
 	
 	
-	// SPARQL QUERIES - written by @tommorris
+	// MEDIA
+	
+	function loadPhoto(src, alt, callback){
+	    if (src){
+	        // TEMP HACK: many of the image urls seem to be incorrect
+	        src = wikimediaAlternative(src);
+	        
+	        $('<img class="photo" src="' + src + '" alt="' + (alt || '') + '">')[0].onload = function(){
+	            callback.call(this);
+	        };
+	            //.load(callback);
+	    }
+	}
+	
+	
+	// SPARQL QUERIES - sparql by @tommorris
 	
 	function person(dbpediaUrl, callback){
+	    var thumbSize = 100;
+	
 		return dbpediaSparql(
 		    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 			    PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
@@ -76,11 +152,23 @@ var revolutionaries = (function(){
 			    FILTER langMatches( lang(?name), "EN" ) .\
 			    FILTER langMatches( lang(?abstract), "EN" ) .\
 		    }',
-		    callback
+		    
+		    function(data){
+		        callback({
+		            type: 'person-detail',
+		            id: urlToId(dbpediaUrl),
+		            url: dbToWikiPediaUrl(dbpediaUrl),
+		            dbUrl: dbpediaUrl,
+		            name: data.name ? data.name.value : '',
+	                depiction: data.depiction ? data.depiction.value : '',
+	                thumbnail: data.thumbnail ? wikimediaSize(data.thumbnail.value, thumbSize) : '',
+	                abstract: data.abstract ? data.abstract.value : ''
+		        });
+		    }
 		);
 	}
 	
-	function influences(dbpediaurl, callback){
+	function influences(dbpediaUrl, callback){
 		return dbpediaSparql(
 		    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 			    PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
@@ -89,18 +177,42 @@ var revolutionaries = (function(){
 			    WHERE {\
 			    ?influence\
 			    <http://dbpedia.org/property/influences>\
-			    <' + dbpediaurl + '> .\
+			    <' + dbpediaUrl + '> .\
 			    OPTIONAL {\
 			    ?influence foaf:name ?name .\
 			    }\
 			    \
 			    FILTER langMatches( lang(?name), "EN" ) .\
 		    }',
-		    callback
+		    
+		    function(items){
+		        var urls = {};
+		        items = $.map(items, function(data, i){
+		            var url = data.influence.value;
+		            if (!urls[url]){
+		                urls[url] = true;
+		                return data;
+		            }
+		        });
+		    
+		        $.each(items, function(i, data){
+		            items[i] = {
+	                    type: 'person-summary',
+	                    dbUrl: data.influence.value,
+	                    url: dbToWikiPediaUrl(data.influence.value),
+		                id: urlToId(data.influence.value),
+		                name: data.name ? data.name.value : '',
+	                    depiction: data.depiction ? data.depiction.value : '',
+	                    thumbnail: data.thumbnail ? data.thumbnail.value : '',
+	                    abstract: data.abstract ? data.abstract.value : ''
+	                };
+	            });
+	            callback(items);
+		    }
 		);
 	}
 	
-	function influenced(dbpediaurl, callback){
+	function influenced(dbpediaUrl, callback, options){
 		return dbpediaSparql(
 		    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 			    PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
@@ -109,14 +221,38 @@ var revolutionaries = (function(){
 			    WHERE {\
 			    ?influenced \
 			    <http://dbpedia.org/property/influenced>\
-			    <http://dbpedia.org/resource/Isaac_Newton>\
+			    <' + dbpediaUrl + '> .\
 			    OPTIONAL {\
 			    ?influenced foaf:name ?name .\
 			    }\
 			    \
 			    FILTER langMatches( lang(?name), "EN" ) .\
 		    }',
-		    callback
+		    
+		    function(items){
+		        var urls = {};
+		        items = $.map(items, function(data, i){
+		            var url = data.influenced.value;
+		            if (!urls[url]){
+		                urls[url] = true;
+		                return data;
+		            }
+		        });
+		    
+		        $.each(items, function(i, data){
+		            items[i] = {
+	                    type: 'person-summary',
+	                    dbUrl: data.influenced.value,
+	                    url: dbToWikiPediaUrl(data.influenced.value),
+		                id: urlToId(data.influenced.value),
+		                name: data.name ? data.name.value : '',
+	                    depiction: data.depiction ? data.depiction.value : '',
+	                    thumbnail: data.thumbnail ? data.thumbnail.value : '',
+	                    abstract: data.abstract ? data.abstract.value : ''
+	                };
+	            });
+	            callback(items);
+		    }
 		);
 	}
 	
@@ -159,71 +295,46 @@ var revolutionaries = (function(){
 	}()),
 	
 	
-	
-	// CONSOLE LOGGING
-	
-	_ = window.console && window.console.log ? window.console.log : function(){},
-	
-	
 	// REVOLUTIONARIES API
 	
 	revolutionaries = {
-		person: function(keyword, callback){
+		keyword: function(keyword, callback){
 			wikipedia(keyword, function(url){
-				if (url){
-					var dbpediaUrl = wikiToDbPediaUrl(url);
-					
-					function personSummary(type, data){
-					    _('personSummary', type, data, data[type]);
-						return {
-						    name: data.name.value,
-						    url: dbToWikiPediaUrl(data[type].value),
-						    depiction: '' // TODO
-						};
-					}
-					
-					function personDetail(type, data){
-					    _('personDetail', type, data);
-						return {
-						    type: type,
-						    name: data.name.value,
-						    url: url,
-						    depiction: data.depiction.value,
-						    abstract: data.abstract.value
-						};
-					}
-					
-					person(dbpediaUrl, function(data){
-						callback(personDetail('revolutionary', data));
-					});
-					
-					influences(dbpediaUrl, function(data){
-					    var type = 'influences',
-					        items = [];
-					    $.each(data, function(i, item){
-					        items.push(personSummary('influence', item));
-					    });
-						callback({
-						    type: type,
-						    items: items
-						});
-					});
-					
-					influenced(dbpediaUrl, function(data){
-					    var type = 'influenced',
-					        items = [];
-					    $.each(data, function(i, item){
-					        items.push(personSummary('influenced', item));
-					    });
-						callback({
-						    type: type,
-						    items: items
-						});
-					});
-				}
+				revolutionaries.person(url, callback);
 			});
 		},
-		tmpl: tmpl
+		
+		person: function(wikipediaUrl, callback){
+		    if (wikipediaUrl){
+				var dbpediaUrl = wikiToDbPediaUrl(wikipediaUrl);
+				
+				person(dbpediaUrl, function(item){
+				    item.type = 'revolutionary';
+				    callback(item);
+				});
+				
+				influences(dbpediaUrl, function(items){
+				    $.each(items, function(i, item){
+				        item.type = 'influence';
+				        callback(item);
+				        person(item.dbUrl, callback);
+				    });
+				});
+				
+				influenced(dbpediaUrl, function(items){
+				    $.each(items, function(i, item){
+				        item.type = 'influenced';
+				        callback(item);
+				        person(item.dbUrl, callback);
+				    });
+				});
+			}
+		},
+		
+		cache: cache,
+		jsonCache: jsonCache,
+		tmpl: tmpl,
+		loadPhoto: loadPhoto
 	};
 		
 	return revolutionaries;
