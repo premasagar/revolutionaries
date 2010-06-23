@@ -1,0 +1,126 @@
+/* Revolutionaries: http://dharmfly.com/revolutionaries */
+/* CSS stylesheet by @yaili & @goodonpaper */
+
+body {
+	background: #000 url('../img/default_bg.png');
+	color: #fff;
+	font-family: 'Palatino','Baskerville','Georgia',serif;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+#sidebar {
+	position: absolute;
+	left: 0px;
+	width: 250px;
+	height: 750px;
+	background: #810101;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#810101), to(#9f0101));
+}
+
+	#sidebar h1 {
+		color: #fff;
+		margin-top: 20px;
+		padding: 20px 20px 20px;
+		font-size: 22px;
+		letter-spacing: 1px;
+		font-variant: small-caps;
+	}
+	
+	#sidebar blockquote {
+	    padding:0 20px 20px;
+	}
+	
+	#sidebar blockquote a {
+	    color:#fff;
+	    font-style:italic;
+	    text-decoration:none;
+	    border-bottom:1px solid #5c0000;
+	}
+	
+	#sidebar blockquote a:hover {
+	    border-color:#fff;
+	}
+
+	.search {
+		width: 190px;
+		background: none;
+		padding: 10px;
+		margin: 40px 20px 20px 20px;
+		font-family: 'Palatino','Baskerville','Georgia',serif;
+		font-size: 16px;
+		color: #fff;
+		border: 1px solid #5c0000;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+	
+	.search:focus {
+	    border-color:#fff;
+	}
+	
+	.hint {
+		clear: both;
+		padding: 0px 20px;
+		color: #ccc;
+	}
+	
+	#history {
+		margin-top: 100px;
+		padding: 20px;
+	}
+	
+	#history li {
+		width: 100px;
+		float: left;
+		font-style: italic;
+	}
+		
+		.next {
+			text-align: right;
+		}
+	
+#content {
+	padding: 60px 60px 60px 310px;
+	background: rgba(0,0,0,0.5);
+	overflow: hidden;
+}
+
+	#content h2 {
+		font-size: 42px;
+		font-style: italic;
+		font-weight: bold;
+		margin-bottom: 30px;
+	}
+	
+	#content p {
+		margin-bottom: 20px;
+	}
+	
+	.influences {
+		overflow: hidden;
+	}
+	
+	.influences li {
+		float: left;
+		margin-right: 20px;
+	}
+	
+	#content h3 {
+		font-size: 16px;
+		font-style: italic;
+		border-bottom: 1px solid #ddd;
+		padding-bottom: 5px;
+		margin-bottom: 30px;
+		margin-top: 40px;
+	}
+	
+	.influences h4 {
+		font-weight: bold;
+	}
+	
+	.influences li img {
+		width: 90px;
+		border: 5px solid #fff;
+	}
