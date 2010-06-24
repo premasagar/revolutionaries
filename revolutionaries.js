@@ -2,6 +2,43 @@
 /* JavaScript by @premasagar */
 
 var revolutionaries = (function(){
+
+    var monitorFreq = 500, // miiliseconds
+        slugHistory = [],
+        window = this,
+        tmpl,
+        api;
+        
+    function triggerSlugChange(slug){
+        jQuery(window).trigger('slugchange', slug);
+    }
+    
+    function slugCache(){
+        var slugLen = slugHistory.length;
+        return slugLen ? slugHistory[slugLen-1] : ''; 
+    }
+
+    function currentSlug(slug, trigger){
+        if (slug && slug !== slugCache()){
+            window.location.hash = '#' + slug;
+            slugHistory.push(slug);
+            
+            if (trigger !== false){
+                triggerSlugChange(slug);
+            }
+        }
+        return window.location.hash.slice(1);
+    }
+    
+    function monitorSlug(){
+        window.setInterval(function(){
+            var slug = currentSlug();
+            if (slugCache() !== slug){
+                currentSlug(slug.replace(/[+ ]/, '_'));
+            }
+        }, monitorFreq);
+    }
+    
 	
 	// CACHE
 	
@@ -26,14 +63,13 @@ var revolutionaries = (function(){
 	}
 	
 	// Caching layer for JSONP data
+	// TODO: add check for error responses, or mechanism for deleting keys
 	function jsonCache(url, callback){
 	    var cached = cache(url);
 	    if (cached){
-	        console.log('cached');
 	        callback(cached);
 	    }
 	    else {
-	        console.log('not cached');
     	    jQuery.getJSON(url, function(data){
     	        cache(url, data);
     	        callback(data);
@@ -45,29 +81,47 @@ var revolutionaries = (function(){
 	// WIKIPEDIA / DBPEDIA
 	
 	function wikipedia(name, callback){
-		var url = "select url from search.web where query=\"site:en.wikipedia.org '" + name + "'\" LIMIT 1";
-		jsonCache(yql(url), function(data){
-			if (data && data.query && data.query.results && data.query.results.result && data.query.results.result.url){
-				callback(data.query.results.result.url);
-			}
-			else {
-				callback(false);
-			}
-		});
+		var query = "select url from search.web where query=\"site:en.wikipedia.org '" + name + "'\" LIMIT 1";
+		yql(query, function(data){
+			callback(data ? data.result.url : data);
+		}, true);
 	}
 	
-	function wikiToDbPediaUrl(url){
-		return url.replace('en.wikipedia.org/wiki', 'dbpedia.org/resource');
+	function dbpediaUrl(url){
+	    var dbBase = 'http://dbpedia.org/resource/',
+	        wikiBase = 'http://en.wikipedia.org/wiki/';
+	        
+	    url = jQuery.trim(url);	    
+	    if (url.indexOf(wikiBase) === 0){
+	        return url.replace(wikiBase, dbBase);
+	    }
+	    return dbBase + url;
 	}
 	
-	function dbToWikiPediaUrl(url){
-		return url.replace('dbpedia.org/resource', 'en.wikipedia.org/wiki');
+	function wikipediaUrl(url){
+	    var dbBase = 'http://dbpedia.org/resource/',
+	        wikiBase = 'http://en.wikipedia.org/wiki/';
+	        
+	    url = jQuery.trim(url);	    
+	    if (url.indexOf(dbBase) === 0){
+	         return url.replace(dbBase, wikiBase);
+	    }
+	    return wikiBase + url;
+	}
+	
+	function urlSlug(url){
+	    return jQuery.trim(url).replace(/^.*\/(.*)\/?$/, '$1');
+	}
+	
+	function slugToId(slug){
+	    return slug
+	        .toLowerCase()
+	        .replace(/[_ ]/g, '-')
+	        .replace(/[^a-z\-]/g, '');
 	}
 	
 	function urlToId(url){
-	    return url.replace(/^.*\/(.*)$/, '$1')
-	        .toLowerCase()
-	        .replace(/[^a-z\-_]/g, '');
+	    return slugToId(urlSlug(url));
 	}
 	
 	function wikimediaAlternative(src){
@@ -78,11 +132,24 @@ var revolutionaries = (function(){
 	    return src.replace(/\d+px/, size + 'px');
 	}
 	
+	function cleanupName(name){
+	    return name.replace(/ \([^\)]*\)/, '');
+	}
+	
 	
 	// YQL & SPARQL	
 	
-	function yql(query){
+	function yqlUrl(query){
 		return 'http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent(query) + '&format=json&callback=?'
+	}
+	
+	function yql(query, callback, cache){
+	    var url = yqlUrl(query),
+	        method = cache ? jsonCache : jQuery.getJSON;
+	        
+	    method.call(null, url, function(data){
+	        callback(data && data.query && data.query.results ? data.query.results : {});
+	    });	    
 	}
 	
 	function dbpediaQuery(sparql){
@@ -93,27 +160,15 @@ var revolutionaries = (function(){
 		return "select results from json where url='" + dbpediaQuery(sparql) + "'";
 	}
 	
-	function yqlSparql(sparql){
-	    var query = yqlSparqlQuery(sparql);
-		return yql(query);
-	}
-	
 	function yqlMulti(queries){ // NOTE: queries should use single quotes around values like urls
-		return yql('select * from query.multi where queries="' + queries.join(';') + '"');
+		return yqlUrl('select * from query.multi where queries="' + queries.join(';') + '"');
 	}
 	
 	function dbpediaSparql(sparql, callback){
-	    var url = yqlSparql(sparql);
-		
-		jsonCache(url, function(data){
-		    // TODO: clean this up by filtering on the YQL side of things
-			if (data && data.query && data.query.results && data.query.results.json && data.query.results.json.results.bindings && data.query.results.json.results.bindings){
-				callback(data.query.results.json.results.bindings);
-			}
-			else {
-				callback({});
-			}
-		});
+	    var query = yqlSparqlQuery(sparql);
+		yql(query, function(data){
+			callback(data && data.json && data.json.results && data.json.results.bindings ? data.json.results.bindings : data);
+		}, true);
 	}
 	
 	
@@ -121,13 +176,15 @@ var revolutionaries = (function(){
 	
 	function loadPhoto(src, alt, callback){
 	    if (src){
-	        // TEMP HACK: many of the image urls seem to be incorrect
-	        src = wikimediaAlternative(src);
+	        var img;
 	        
-	        $('<img class="photo" src="' + src + '" alt="' + (alt || '') + '">')[0].onload = function(){
-	            callback.call(this);
-	        };
-	            //.load(callback);
+	        img = jQuery('<img class="photo" src="' + src + '" alt="' + (alt || '') + '">')[0];
+	        img.onload = function(){
+                callback.call(this, true);
+            };
+	        img.onerror = function(){
+                callback.call(this, false);
+            };
 	    }
 	}
 	
@@ -157,9 +214,9 @@ var revolutionaries = (function(){
 		        callback({
 		            type: 'person-detail',
 		            id: urlToId(dbpediaUrl),
-		            url: dbToWikiPediaUrl(dbpediaUrl),
+		            url: wikipediaUrl(dbpediaUrl),
 		            dbUrl: dbpediaUrl,
-		            name: data.name ? data.name.value : '',
+		            name: data.name ? cleanupName(data.name.value) : '',
 	                depiction: data.depiction ? data.depiction.value : '',
 	                thumbnail: data.thumbnail ? wikimediaSize(data.thumbnail.value, thumbSize) : '',
 	                abstract: data.abstract ? data.abstract.value : ''
@@ -187,7 +244,7 @@ var revolutionaries = (function(){
 		    
 		    function(items){
 		        var urls = {};
-		        items = $.map(items, function(data, i){
+		        items = jQuery.map(items, function(data, i){
 		            var url = data.influence.value;
 		            if (!urls[url]){
 		                urls[url] = true;
@@ -195,13 +252,13 @@ var revolutionaries = (function(){
 		            }
 		        });
 		    
-		        $.each(items, function(i, data){
+		        jQuery.each(items, function(i, data){
 		            items[i] = {
 	                    type: 'person-summary',
 	                    dbUrl: data.influence.value,
-	                    url: dbToWikiPediaUrl(data.influence.value),
+	                    url: wikipediaUrl(data.influence.value),
 		                id: urlToId(data.influence.value),
-		                name: data.name ? data.name.value : '',
+		                name: data.name ? cleanupName(data.name.value) : '',
 	                    depiction: data.depiction ? data.depiction.value : '',
 	                    thumbnail: data.thumbnail ? data.thumbnail.value : '',
 	                    abstract: data.abstract ? data.abstract.value : ''
@@ -231,7 +288,7 @@ var revolutionaries = (function(){
 		    
 		    function(items){
 		        var urls = {};
-		        items = $.map(items, function(data, i){
+		        items = jQuery.map(items, function(data, i){
 		            var url = data.influenced.value;
 		            if (!urls[url]){
 		                urls[url] = true;
@@ -239,13 +296,13 @@ var revolutionaries = (function(){
 		            }
 		        });
 		    
-		        $.each(items, function(i, data){
+		        jQuery.each(items, function(i, data){
 		            items[i] = {
 	                    type: 'person-summary',
 	                    dbUrl: data.influenced.value,
-	                    url: dbToWikiPediaUrl(data.influenced.value),
+	                    url: wikipediaUrl(data.influenced.value),
 		                id: urlToId(data.influenced.value),
-		                name: data.name ? data.name.value : '',
+		                name: data.name ? cleanupName(data.name.value) : '',
 	                    depiction: data.depiction ? data.depiction.value : '',
 	                    thumbnail: data.thumbnail ? data.thumbnail.value : '',
 	                    abstract: data.abstract ? data.abstract.value : ''
@@ -261,7 +318,7 @@ var revolutionaries = (function(){
 	
 	// Tmpl, by John Resig - http://ejohn.org/ - MIT Licensed
 	// Modified as per Neil on Rick Stahl's blog http://www.west-wind.com/Weblog/posts/509108.aspx#532836
-	var tmpl = (function() {
+	tmpl = (function() {
 	    var cache = {},
 		tmpl = function tmpl(str, data) {
 	        // Figure out if we're getting a template, or if we need to
@@ -292,50 +349,66 @@ var revolutionaries = (function(){
 	        return data ? fn(data) : fn;
 	    };
 		return tmpl;
-	}()),
+	}());
 	
 	
 	// REVOLUTIONARIES API
 	
-	revolutionaries = {
+	api = {
+	    slug: function(slug, callback){
+	        api.person(dbpediaUrl(slug), callback);
+	    },
+	
 		keyword: function(keyword, callback){
 			wikipedia(keyword, function(url){
-				revolutionaries.person(url, callback);
+				api.person(dbpediaUrl(url), callback);
 			});
 		},
 		
-		person: function(wikipediaUrl, callback){
-		    if (wikipediaUrl){
-				var dbpediaUrl = wikiToDbPediaUrl(wikipediaUrl);
-				
-				person(dbpediaUrl, function(item){
+		person: function(url, callback){		
+		    if (url){
+				person(url, function(item){
 				    item.type = 'revolutionary';
 				    callback(item);
 				});
 				
-				influences(dbpediaUrl, function(items){
-				    $.each(items, function(i, item){
-				        item.type = 'influence';
-				        callback(item);
-				        person(item.dbUrl, callback);
+				influences(url, function(items){
+				    jQuery.each(items, function(i, item){
+				        person(item.dbUrl, function(item){
+				            item.type = 'influence';
+				            callback(item);
+				        });
 				    });
 				});
 				
-				influenced(dbpediaUrl, function(items){
-				    $.each(items, function(i, item){
-				        item.type = 'influenced';
-				        callback(item);
-				        person(item.dbUrl, callback);
+				influenced(url, function(items){
+				    jQuery.each(items, function(i, item){
+				        person(item.dbUrl, function(item){
+				            item.type = 'influenced';
+				            callback(item);
+				        });
 				    });
 				});
 			}
 		},
 		
+		init: function(slug){
+		    if (slug){
+		        currentSlug(slug);
+		    }
+		    monitorSlug();
+		},
+		
 		cache: cache,
 		jsonCache: jsonCache,
 		tmpl: tmpl,
-		loadPhoto: loadPhoto
+		loadPhoto: loadPhoto,
+		wikimediaAlternative: wikimediaAlternative,
+		currentSlug: currentSlug,
+		dbpediaUrl: dbpediaUrl,
+		wikipediaUrl: wikipediaUrl,
+		urlSlug: urlSlug
 	};
 		
-	return revolutionaries;
+	return api;
 }());

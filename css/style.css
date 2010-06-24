@@ -9,11 +9,15 @@ body {
 	line-height: 24px;
 }
 
+img {
+    -ms-interpolation-mode: bicubic;
+}
+
 #sidebar {
 	position: absolute;
 	left: 0px;
 	width: 250px;
-	height: 750px;
+	min-height: 100%;
 	background: #810101;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#810101), to(#9f0101));
 }
@@ -25,6 +29,18 @@ body {
 		font-size: 22px;
 		letter-spacing: 1px;
 		font-variant: small-caps;
+	}
+	
+	#sidebar h1 a {
+	    text-decoration:none;
+	}
+	
+	#sidebar h1 a:hover {
+	    text-decoration:underline;
+	}
+	
+	#sidebar a {
+	    color:#fff;
 	}
 	
 	#sidebar blockquote {
@@ -60,10 +76,18 @@ body {
 	    border-color:#fff;
 	}
 	
-	.hint {
+	#sidebar .hint {
 		clear: both;
 		padding: 0px 20px;
 		color: #ccc;
+	}
+	
+	#sidebar .hint a {
+	    color: #ccc;
+	}
+	
+	#sidebar .hint a:hover {
+	    color: #fff;
 	}
 	
 	#history {
@@ -87,19 +111,23 @@ body {
 	overflow: hidden;
 }
 
-	#content h2 {
+	#revolutionary h2 {
 		font-size: 42px;
 		font-style: italic;
 		font-weight: bold;
 		margin-bottom: 30px;
 	}
 	
-	#content h2 a {
+	#revolutionary h2 a {
 	    color:#fff;
 	}
 	
+	#revolutionary img {
+	    height:500px;
+	}
+	
 	#content h3 {
-		font-size: 16px;
+		font-size: 1.62em;
 		font-style: italic;
 		border-bottom: 1px solid #ddd;
 		padding-bottom: 5px;
