@@ -41,11 +41,19 @@
 	
 	<!-- templates -->
 	
+	<script type="text/template" id="abstractParaTmpl">
+	    <p><%= paragraph %></p>
+	</script>
+	
+	<script type="text/template" id="abstractMoreLessTmpl">
+	    <a class="moreless"><%= moreless %></a> 
+	</script>
+	
 	<script type="text/template" id="itemDetailTmpl">
 	    <div class="item-detail vcard <%= id %>">
 		    <h2><a class="fn url" href="<%= url %>" title="<%= name %>"><%= name %></a></h2>
 	        <p><a class="photo-container" href="<%= url %>" title="<%= name %>"></a></p>
-            <p><%= abstract %></p>
+            <div class="abstract"><%= abstract %></div>
         </div>
 	</script>
 	
@@ -90,15 +98,7 @@
 	    s = $('.search', side),
 	    tmpl = revolutionaries.tmpl,
 	    influences, influencesList, influenced, influencedList;
-	
-	// searchbox behaviour
-    s.focus(function(){
-        s.val('');
-    })
-    .blur(function(){
-        var val = s.val();
-        s.val(val ? val : s.attr('title'));
-    });
+	    
     
     // sidebar height
 	function resetSidebarHeight(){
@@ -146,11 +146,17 @@
         );
     }
     
+    function summary(abstract, spliceStart, spliceEnd){
+        return tmpl('abstractParaTmpl', {
+            paragraph: api.paragraph(abstract, spliceStart, spliceEnd)
+        });
+    }
+    
     // update display
     function display(data){
     
         var type = data.type,
-            items, container, item;           
+            items, container, item, abstract, moreless;
         
         if (!type){
             return false;
@@ -159,9 +165,20 @@
         // Route data to micro-templates
         switch(type){
             // main subject
-            case 'revolutionary':
+            case 'revolutionary':            
+                moreless = $(tmpl('abstractMoreLessTmpl', {moreless: 'More >'}))
+                    .click(function(){
+                        $('.abstract', revolutionary)
+                            .html(summary(data.abstract));
+                    });
+            
                 clear();
-                revolutionary.html(tmpl('itemDetailTmpl', data));                          
+                
+                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {abstract:summary(data.abstract, 0, 2)})));
+                
+                $('.abstract p:last', revolutionary)
+                    .append(moreless);
+                    
                 loadPhoto(data, function(img){
                     insertImg(img, data.id);
                 }, true);
@@ -170,9 +187,6 @@
             
             // detail for influences and influenced
             case 'person-detail':
-                loadPhoto(data, function(img){
-                    insertImg(img, data.id);
-                });
             break;
             
             
@@ -228,9 +242,15 @@
         resetSidebarHeight();
     }
     
-    // initialise
-    // search box
-    s.parent('form').submit(function(){
+    // search box behaviour
+    s.focus(function(){
+        s.val('');
+    })
+    .blur(function(){
+        var val = s.val();
+        s.val(val ? val : s.attr('title'));
+    })
+    .parent('form').submit(function(){
         api.keyword(s.val(), function(data){
             api.currentSlug(api.urlSlug(data.dbUrl), false);
             display(data);
@@ -238,10 +258,12 @@
         return false;
     });
     
-    resetSidebarHeight();
     jQuery(window).bind('slugchange', function(ev, slug){
         api.slug(slug, display);
-    });
+    })
+    
+    // initialise
+    resetSidebarHeight();
     api.init(theDefault);
 	</script>
 	

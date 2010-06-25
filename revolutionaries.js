@@ -9,6 +9,9 @@ var revolutionaries = (function(){
         tmpl,
         api;
         
+        
+    // LOW-LEVEL
+        
     function triggerSlugChange(slug){
         jQuery(window).trigger('slugchange', slug);
     }
@@ -38,6 +41,39 @@ var revolutionaries = (function(){
             }
         }, monitorFreq);
     }
+    
+    
+    // PROSE
+    
+    // split a string into sentences
+    function sentences(txt, spliceStart, spliceEnd){
+        spliceStart = spliceStart || 0;
+    
+        var delim = '@@R@E@V@O~L~U~T~I~O@N@A@R@Y@',
+            s = jQuery.trim(txt)
+                .replace(/\.\s*/g, '.' + delim)
+                .split(delim),
+            len = s.length;
+
+        s[len-1].replace(/(?!\.)$/, '.');
+        spliceEnd = typeof spliceEnd === 'number' ? spliceEnd : len;
+        return s.slice(spliceStart, spliceEnd);
+    }
+
+    // select a number of sentences from a paragraph
+    /* e.g.
+        paragraph('mary had. a little lamb. its fleecy as white as snowy. white and the seven', 1, 3);
+    */
+    function paragraph(txtOrSentences, spliceStart, spliceEnd){
+        if (typeof txtOrSentences === 'string'){
+            return paragraph(sentences(txtOrSentences, spliceStart, spliceEnd));
+        }
+        else {
+            return txtOrSentences
+                .join(' ');
+        }
+    }
+    
     
 	
 	// CACHE
@@ -407,7 +443,9 @@ var revolutionaries = (function(){
 		currentSlug: currentSlug,
 		dbpediaUrl: dbpediaUrl,
 		wikipediaUrl: wikipediaUrl,
-		urlSlug: urlSlug
+		urlSlug: urlSlug,
+		paragraph: paragraph,
+		sentences: sentences
 	};
 		
 	return api;

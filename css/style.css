@@ -9,6 +9,12 @@ body {
 	line-height: 24px;
 }
 
+a {
+    cursor:pointer;
+    color:#fff;
+    text-decoration:underline;
+}
+
 img {
     -ms-interpolation-mode: bicubic;
 }
@@ -135,10 +141,17 @@ img {
 		margin-top: 40px;
 	}
 	
-	#content p {
+	#revolutionary .abstract {
 		margin-bottom: 20px;
+	}
+	#revolutionary .abstract p {
 		font-size:1.62em;
 		line-height:1.62em;
+	}
+	#revolutionary .abstract .moreless {
+	    font-weight:bold;
+	    font-style:italic;
+	    margin-left:1em;
 	}
 	
 	#related div ul {
@@ -156,6 +169,11 @@ img {
 	
 	#related div li h4 a {
 		color: #fff;
+		text-decoration:none;
+	}
+	
+	#related div li:hover h4 a {
+		text-decoration:underline;
 	}
 	
 	#related div li a.photo-container {
@@ -168,6 +186,11 @@ img {
 		border: 5px solid #fff;
 		max-height:138px;
 	}
+	
+	#related div li:hover img.photo {
+		border-color:#810101;
+	}
+	
 	#related div li img.photo[src=""] {
 		display:none;
 	}
