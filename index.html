@@ -21,8 +21,8 @@
         <p class="hint">Try searching for inventors, thinkers, or revolutionaries (<em>eg. "<a href="#Isaac_Newton">Isaac Newton</a>", "<a href="#Albert_Einstein">Albert Einstein</a>"</em>).<p>
 
         <ul id="history">
-            <li class="previous">&larr; Previous<br>Article title</li>
-            <li class="next">Next &rarr;<br>Article title</li>
+            <li class="previous">&larr; Previous</li>
+            <li class="next">Next &rarr;</li>
         </ul>
     </div>
 	
@@ -96,6 +96,8 @@
 	    revolutionary = $('#revolutionary'),
 	    related = $('#related'),
 	    s = $('.search', side),
+	    prev = $('#history .previous'),
+	    next = $('#history .next'),
 	    tmpl = revolutionaries.tmpl,
 	    influences, influencesList, influenced, influencedList;
 	    
@@ -152,6 +154,22 @@
         });
     }
     
+    // navigation
+    function showhideNav(){
+        if (api.isPrev()){
+            prev.show();
+        }
+        else {
+            prev.hide();
+        }
+        if (api.isNext()){
+            next.show();
+        }
+        else {
+            next.hide();
+        }
+    }
+    
     // update display
     function display(data){
     
@@ -171,7 +189,7 @@
                         function(){
                             jQuery('.moreless', abstract)
                                 .text('< Less');
-                            jQuery(summary(data.abstract, 2))
+                            jQuery(summary(data.abstract, 1))
                                 .appendTo('.abstract');
                         },
                         function(){
@@ -183,7 +201,7 @@
             
                 clear();
                 
-                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {abstract:summary(data.abstract, 0, 2)})));
+                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {abstract:summary(data.abstract, 0, 1)})));
                 
                 $('.abstract p:last', revolutionary)
                     .append(moreless);
@@ -191,6 +209,8 @@
                 loadPhoto(data, function(img){
                     insertImg(img, data.id);
                 }, true);
+                
+                showhideNav(); 
             break;
             
             
@@ -247,7 +267,7 @@
                 });
             break;
         }
-        
+               
         resetSidebarHeight();
     }
     
@@ -269,7 +289,16 @@
     
     jQuery(window).bind('slugchange', function(ev, slug){
         api.slug(slug, display);
-    })
+    });
+    
+    
+        
+    prev.click(function(){
+        api.prevSlug();
+    });
+    next.click(function(){
+        api.nextSlug();
+    });
     
     // initialise
     resetSidebarHeight();

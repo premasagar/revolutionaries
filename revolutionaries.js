@@ -4,39 +4,94 @@
 var revolutionaries = (function(){
 
     var monitorFreq = 500, // miiliseconds
-        slugHistory = [],
+        slugHistoryCache = [],
+        slugCurrent = -1,
         window = this,
         tmpl,
         api;
         
         
-    // LOW-LEVEL
+    // WINDOW.LOCATION && DB/WIKIPEDIA SLUGS
         
     function triggerSlugChange(slug){
         jQuery(window).trigger('slugchange', slug);
     }
     
-    function slugCache(){
-        var slugLen = slugHistory.length;
-        return slugLen ? slugHistory[slugLen-1] : ''; 
+    function slugHistory(index){
+        if (jQuery.isArray(index)){
+            return slugHistoryCache;
+        }
+        if (typeof index !== 'number'){
+            index = slugCurrent;
+        }
+        return index === -1 ?
+            slugHistoryCache[slugHistoryCache.length - 1] :
+            slugHistoryCache[index];
     }
-
-    function currentSlug(slug, trigger){
-        if (slug && slug !== slugCache()){
-            window.location.hash = '#' + slug;
-            slugHistory.push(slug);
+    
+    function prevSlug(){
+        var last = slugHistoryCache.length - 1,
+            newIndex = slugCurrent;
             
-            if (trigger !== false){
-                triggerSlugChange(slug);
+        if (isPrev()){
+            newIndex = (slugCurrent === - 1 ? last : slugCurrent) - 1;
+            currentSlug(newIndex);
+        }
+    }
+    
+    function nextSlug(){
+        var last = slugHistoryCache.length - 1,
+            newIndex = slugCurrent;
+            
+        if (isNext()){
+            newIndex = slugCurrent + 1;
+            currentSlug(newIndex);
+        }
+    }
+    
+    function isPrev(){
+        return slugCurrent === -1 ?
+            slugHistoryCache.length > 1 :
+            !!slugCurrent;
+    }
+        
+    function isNext(){
+        return slugCurrent !== -1 && slugCurrent < slugHistoryCache.length - 1;
+    }
+    
+    function currentSlug(newSlug, trigger){
+        var index;
+        
+        if (typeof newSlug === 'undefined'){
+            return window.location.hash.slice(1);
+        }
+        if (typeof newSlug === 'number'){
+            index = newSlug;
+            newSlug = slugHistory(index);
+            if (newSlug){
+               slugCurrent = index;
+            }
+            else {
+                return;
             }
         }
-        return window.location.hash.slice(1);
+        else if (typeof newSlug === 'string' && newSlug !== slugHistory()){
+            if (slugCurrent !== -1 && slugCurrent !== (slugHistoryCache.length -1)){
+                slugHistoryCache = slugHistoryCache.slice(0, slugCurrent + 1);
+            }
+            slugHistoryCache.push(newSlug);
+            slugCurrent = -1;
+        }
+        window.location.hash = '#' + newSlug;
+        if (trigger !== false){
+            triggerSlugChange(newSlug);
+        }        
     }
     
     function monitorSlug(){
         window.setInterval(function(){
             var slug = currentSlug();
-            if (slugCache() !== slug){
+            if (slugHistory() !== slug){
                 currentSlug(slug.replace(/[+ ]/, '_'));
             }
         }, monitorFreq);
@@ -441,6 +496,11 @@ var revolutionaries = (function(){
 		loadPhoto: loadPhoto,
 		wikimediaAlternative: wikimediaAlternative,
 		currentSlug: currentSlug,
+		slugHistory: slugHistory,
+		prevSlug: prevSlug,
+		nextSlug: nextSlug,
+		isPrev: isPrev,
+		isNext: isNext,
 		dbpediaUrl: dbpediaUrl,
 		wikipediaUrl: wikipediaUrl,
 		urlSlug: urlSlug,

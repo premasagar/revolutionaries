@@ -103,13 +103,28 @@ img {
 	
 	#history li {
 		width: 100px;
-		float: left;
 		font-style: italic;
+		display:none;
 	}
-		
-		.next {
-			text-align: right;
-		}
+	
+	#history li.previous {
+		float: left;
+	}
+	
+	#history li.next {
+		float: right;
+		text-align: right;
+	}
+	
+	#history li.active {
+	    display:block;
+	}
+	
+	#history li:hover {
+	    text-decoration:underline;
+	    cursor:pointer;
+	}
+	
 	
 #content {
 	padding: 60px 60px 60px 310px;
