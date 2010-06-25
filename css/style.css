@@ -141,12 +141,10 @@ img {
 		margin-top: 40px;
 	}
 	
-	#revolutionary .abstract {
-		margin-bottom: 20px;
-	}
 	#revolutionary .abstract p {
 		font-size:1.62em;
 		line-height:1.62em;
+		margin-bottom: 20px;
 	}
 	#revolutionary .abstract .moreless {
 	    font-weight:bold;

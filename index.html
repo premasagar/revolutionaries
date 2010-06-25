@@ -167,10 +167,19 @@
             // main subject
             case 'revolutionary':            
                 moreless = $(tmpl('abstractMoreLessTmpl', {moreless: 'More >'}))
-                    .click(function(){
-                        $('.abstract', revolutionary)
-                            .html(summary(data.abstract));
-                    });
+                    .toggle(
+                        function(){
+                            jQuery('.moreless', abstract)
+                                .text('< Less');
+                            jQuery(summary(data.abstract, 2))
+                                .appendTo('.abstract');
+                        },
+                        function(){
+                            jQuery('.moreless', abstract)
+                                .text('More >');
+                            jQuery('.abstract p:not(:first)').remove();
+                        }
+                    );
             
                 clear();
                 
