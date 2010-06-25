@@ -7,6 +7,8 @@ var revolutionaries = (function(){
         slugHistoryCache = [],
         slugCurrent = -1,
         window = this,
+        jQuery = window.jQuery,
+        _ = window._,
         tmpl,
         api;
         
@@ -79,11 +81,8 @@ var revolutionaries = (function(){
     }
     
     function nextSlug(){
-        var last = slugHistoryCache.length - 1,
-            newIndex = slugCurrent;
-            
         if (isNext()){
-            newIndex = slugCurrent + 1;
+            slugCurrent = slugCurrent + 1;
             currentSlug(newIndex);
         }
     }
@@ -137,9 +136,12 @@ var revolutionaries = (function(){
     
     // localStorage wrapper
     function cache(key, value){
-        var ns = 'revolutionaries';
+        var ns = 'revolutionaries',
+            localStorage = window.localStorage,
+            JSON = window.JSON;
         
         if (!localStorage || !JSON){
+            _(!!localStorage, !!JSON);
             return false;
         }
         key = ns + '.' + key;
@@ -486,19 +488,22 @@ var revolutionaries = (function(){
 
 // DISPLAY
 
-(function($){
+(function(){
     var api = revolutionaries,
-        win = $(window),
-        body = $('body'),
-        side = $('#sidebar'),
-        content = $('#content'),
-        revolutionary = $('#revolutionary'),
-        related = $('#related'),
-        s = $('.search', side),
-        prev = $('.history .previous', side),
-        next = $('.history .next', side),
-        report = $('.report', side),
-        about = $('.about', content),
+        window = this,
+        jQuery = window.jQuery,
+        _ = window._,
+        win = jQuery(window),
+        body = jQuery('body'),
+        side = jQuery('#sidebar'),
+        content = jQuery('#content'),
+        revolutionary = jQuery('#revolutionary'),
+        related = jQuery('#related'),
+        s = jQuery('.search', side),
+        prev = jQuery('.history .previous', side),
+        next = jQuery('.history .next', side),
+        report = jQuery('.report', side),
+        about = jQuery('.about', content),
         tmpl = revolutionaries.tmpl,
         influences, influencesList, influenced, influencedList;
         
@@ -523,7 +528,7 @@ var revolutionaries = (function(){
     
     function insertImg(img, id, container){
         container = container || body;      
-        $(img).appendTo('.' + id + ' .photo-container', container);
+        jQuery(img).appendTo('.' + id + ' .photo-container', container);
         resetSidebarHeight();
     }
     
@@ -571,10 +576,10 @@ var revolutionaries = (function(){
             next.hide();
         }
         
-        $('#revolutionary .history .previous')
+        jQuery('#revolutionary .history .previous')
             .replaceWith(prev.clone(true));            
         
-        $('#revolutionary .history .next')
+        jQuery('#revolutionary .history .next')
             .replaceWith(next.clone(true));
             
         s.val(s.attr('title'));
@@ -583,7 +588,7 @@ var revolutionaries = (function(){
     // update display
     function display(data){
         var type = data ? data.type : false,
-            items, container, item, abstract, moreless;
+            item, abstract, moreless;
     
         // Route data to micro-templates
         switch(type){
@@ -596,7 +601,7 @@ var revolutionaries = (function(){
                 
                 about.hide();
                 api.currentSlug(api.urlSlug(data.dbUrl), false);
-                moreless = $(tmpl('abstractMoreLessTmpl', {moreless: 'More >'}))
+                moreless = jQuery(tmpl('abstractMoreLessTmpl', {moreless: 'More >'}))
                     .toggle(
                         function(){
                             jQuery('.moreless', abstract)
@@ -611,7 +616,7 @@ var revolutionaries = (function(){
                                 .text('More >');
                             jQuery('.abstract p:not(:first)')
                                 .slideUp('fast', function(){
-                                    $(this).remove();
+                                    jQuery(this).remove();
                                 });
                         }
                     );
@@ -621,7 +626,7 @@ var revolutionaries = (function(){
                 revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {abstract:summary(data.abstract, 0, 1)})));
                 
                 if (api.sentences(data.abstract).length > 1){
-                    $('.abstract p:last', revolutionary)
+                    jQuery('.abstract p:last', revolutionary)
                         .append(moreless);
                 }
                     
@@ -640,7 +645,7 @@ var revolutionaries = (function(){
                 }
                 loadPhoto(data, function(img){
                     if (!influences){
-                        influences = $(tmpl('itemsTmpl', {type:type, title:'Was influenced by...'}));
+                        influences = jQuery(tmpl('itemsTmpl', {type:type, title:'Was influenced by...'}));
                         if (influenced){
                             influences.insertBefore(influenced);
                         }
@@ -649,7 +654,7 @@ var revolutionaries = (function(){
                         }
                         influencesList = influences.find('ul');
                     }
-                    item = $(tmpl('itemTmpl', {id:data.id, item:tmpl('itemSummaryTmpl', data)}));
+                    item = jQuery(tmpl('itemTmpl', {id:data.id, item:tmpl('itemSummaryTmpl', data)}));
                     item.find('a').click(function(){
                         api.person(data.dbUrl, function(data){
                             display(data);
@@ -669,11 +674,11 @@ var revolutionaries = (function(){
                 }
                 loadPhoto(data, function(img){
                     if (!influenced){
-                        influenced = $(tmpl('itemsTmpl', {type:type, title:'Has been an influence to...'}))
+                        influenced = jQuery(tmpl('itemsTmpl', {type:type, title:'Has been an influence to...'}))
                             .appendTo(related);
                         influencedList = influenced.find('ul');
                     }
-                    item = $(tmpl('itemTmpl', {id:data.id, item:tmpl('itemSummaryTmpl', data)}));
+                    item = jQuery(tmpl('itemTmpl', {id:data.id, item:tmpl('itemSummaryTmpl', data)}));
                     item.find('a').click(function(){
                         api.person(data.dbUrl, function(data){
                             display(data);
@@ -726,4 +731,4 @@ var revolutionaries = (function(){
     }
     resetSidebarHeight();
     api.init();
-}(jQuery));
+}());
