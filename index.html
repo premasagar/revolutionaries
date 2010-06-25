@@ -9,8 +9,10 @@
 
 <body>
     <div id="sidebar">
-        <h1><a href="">The Revolutionaries</a></h1>
-        <blockquote>
+        <h1><a href="index.html">The Revolutionaries</a></h1>        
+        <p class="report"></p>
+        
+        <blockquote id="the-default">
             <a class="cite" href="http://twitter.com/sciencehackday/status/16608593166" title='OH: "Isaac Newton should be the default..."'>Isaac Newton should be the default...</a>
         </blockquote>
 
@@ -20,7 +22,7 @@
         
         <p class="hint">Try searching for inventors, thinkers, or revolutionaries (<em>eg. "<a href="#Isaac_Newton">Isaac Newton</a>", "<a href="#Albert_Einstein">Albert Einstein</a>"</em>).<p>
 
-        <ul id="history">
+        <ul class="history">
             <li class="previous">&larr; Previous</li>
             <li class="next">Next &rarr;</li>
         </ul>
@@ -30,6 +32,43 @@
 	<!-- content -->
 	
 	<div id="content">
+	    <div class="about">
+	        <h2>About</h2>
+	        <p><strong><em><a href="http://dharmafly.com/revolutionaries">"The Revolutionaries"</a></em></strong> is an explorer of the influence and relationships between different scientists, inventors and revolutionary thinkers. It was built in 24 hours at <a href="http://sciencehackday.com">Science Hack Day</a>, in June 2010 (and then improved a fair bit, after the event).</p>
+	        
+	        <p>The original idea was to help visualise how we arrive at great inventions, and how ideas evolve over time. For example, something like the <a href="#Space_Shuttle">space shuttle</a> is the result of countless generations of converging technologies, and all the thought processes and theorems behind them.</p>
+	        	        
+	        <h3>Want to get started?</h3>
+	        <p class="get-started">
+	            <a href="#Isaac_Newton" title="Isaac Newton">Start exploring here...<br />
+	            <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/39/GodfreyKneller-IsaacNewton-1689.jpg/178px-GodfreyKneller-IsaacNewton-1689.jpg" width=178 height=244></a>
+	        </p>
+	        
+	        <h3>Who built it?</h3>
+	        <p><a href="http://twitter.com/premasagar">@premasagar</a>, <a href="http://twitter.com/mia_out">@mia_out</a> and <a href="http://twitter.com/ironyboy">@ironyboy</a> - (with <a href="http://twitter.com/tommorris">@tommorris</a>, <a href="http://twitter.com/goodonpaper">@goodonpaper</a>, <a href="http://twitter.com/yaili">@yaili</a> & <a href="http://twitter.com/rboulton">@rboulton</a>).</p>
+	        
+	        <p>If you have any feedback, please let us know.</p>
+	        
+	        <p class="icons">
+	            <a title="Science Hack Day" href="http://sciencehackday.com"><img src="img/scihack.png" alt="Science Hack Day"></a>
+	            <a title="Wikipedia" href="http://en.wikipedia.org"><img src="img/wikipedia.png" alt="Wikipedia"></a>
+	            <a title="DBpedia" href="http://dbpedia.org"><img src="img/dbpedia.png" alt="DBpedia"></a>
+	            <a title="YQL" href="http://developer.yahoo.com/yql/"><img src="img/yql.gif" alt="YQL"></a>
+	        </p>
+	        
+	        <h3>Technical details</h3>
+	        <p>The application does not have its own server. Instead, it uses JavaScript to request data from <a href="http://en.wikipedia.org">Wikipedia</a>. It does this via <a href="http://en.wikipedia.org/wiki/SPARQL">SPARQL queries</a> into the <a href="http://dbpedia.org">DBpedia</a> API, all wrapped in calls to Yahoo's <a href="http://developer.yahoo.com/yql/">YQL</a> web service. Plus a couple of other little tricks, like passing any keywords in the Search box through Google, to find the top result in Wikipedia for that term.</p>
+	        
+	        <h3>Browser caching</h3>
+	        <p>In order to speed up the browsing experience and to reduce the number of API calls, the app takes advantage of <a href="http://hacks.mozilla.org/2009/06/localstorage/">localStorage</a>, which is like a simple database contained within the browser. If you are using a modern browser, you should find that previously viewed people display very fast.</p>
+	        
+	        <h3>The Science Museum Collection</h3>
+	        <p>We began to integrate the <a href="http://collectionsonline.nmsi.ac.uk">Science Museum's collections database</a>, to let us shift the context from the scientists to the technologies they invented, but this work hasn't been completed.</p>
+	        
+	        <h3>A prototype</h3>
+	        <p>This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again. We'll be open-sourcing the code shortly.</p>
+	    </div>
+	
 	    <div id="revolutionary"></div>
 	    <div id="related"></div>
 	</div>
@@ -53,6 +92,10 @@
 	    <div class="item-detail vcard <%= id %>">
 		    <h2><a class="fn url" href="<%= url %>" title="<%= name %>"><%= name %></a></h2>
 	        <p><a class="photo-container" href="<%= url %>" title="<%= name %>"></a></p>
+	        <ul class="history">
+                <li class="previous">&larr; Previous</li>
+                <li class="next">Next &rarr;</li>
+            </ul>
             <div class="abstract"><%= abstract %></div>
         </div>
 	</script>
@@ -85,225 +128,10 @@
     <script src="console.js"></script>
     <script src="jquery.js"></script>
     <script src="revolutionaries.js"></script>
-	<script>
-	
-	var theDefault = 'Isaac_Newton',
-	    api = revolutionaries,
-	    win = $(window),
-	    body = $('body'),
-	    side = $('#sidebar'),
-	    content = $('#content'),
-	    revolutionary = $('#revolutionary'),
-	    related = $('#related'),
-	    s = $('.search', side),
-	    prev = $('#history .previous'),
-	    next = $('#history .next'),
-	    tmpl = revolutionaries.tmpl,
-	    influences, influencesList, influenced, influencedList;
-	    
-    
-    // sidebar height
-	function resetSidebarHeight(){
-	    var wh = win.height(),
-	        bh = body.height(),
-	        ch = content.height();
-	    
-	    side.height(Math.max(wh, bh, ch));
-	}
-    
-    // reset DOM
-    function clear(){
-        revolutionary.empty();
-        related.empty();
-        influences = null;    
-        influenced = null;
-	    resetSidebarHeight();
-    }
-    
-    function insertImg(img, id){
-        $(img).appendTo('.' + id + ' .photo-container', revolutionary);
-        resetSidebarHeight();
-    }
-    
-    function loadPhoto(data, callback, large){
-        api.loadPhoto(
-            large ? data.depiction : data.thumbnail,
-            data.name,
-            function(success){
-                if (success){
-                    callback(this);
-            	}
-            	else { // try alternative src - TODO: clean this logic up
-            	    api.loadPhoto(
-                        api.wikimediaAlternative(data.thumbnail),
-                        data.name,
-                        function(success){
-                            if (success){
-                                callback(this);
-                        	}
-                        }
-                    );
-            	}
-            }
-        );
-    }
-    
-    function summary(abstract, spliceStart, spliceEnd){
-        return tmpl('abstractParaTmpl', {
-            paragraph: api.paragraph(abstract, spliceStart, spliceEnd)
-        });
-    }
-    
-    // navigation
-    function showhideNav(){
-        if (api.isPrev()){
-            prev.show();
-        }
-        else {
-            prev.hide();
-        }
-        if (api.isNext()){
-            next.show();
-        }
-        else {
-            next.hide();
-        }
-    }
-    
-    // update display
-    function display(data){
-    
-        var type = data.type,
-            items, container, item, abstract, moreless;
-        
-        if (!type){
-            return false;
-        }
-    
-        // Route data to micro-templates
-        switch(type){
-            // main subject
-            case 'revolutionary':            
-                moreless = $(tmpl('abstractMoreLessTmpl', {moreless: 'More >'}))
-                    .toggle(
-                        function(){
-                            jQuery('.moreless', abstract)
-                                .text('< Less');
-                            jQuery(summary(data.abstract, 1))
-                                .appendTo('.abstract');
-                        },
-                        function(){
-                            jQuery('.moreless', abstract)
-                                .text('More >');
-                            jQuery('.abstract p:not(:first)').remove();
-                        }
-                    );
-            
-                clear();
-                
-                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {abstract:summary(data.abstract, 0, 1)})));
-                
-                $('.abstract p:last', revolutionary)
-                    .append(moreless);
-                    
-                loadPhoto(data, function(img){
-                    insertImg(img, data.id);
-                }, true);
-                
-                showhideNav(); 
-            break;
-            
-            
-            // detail for influences and influenced
-            case 'person-detail':
-            break;
-            
-            
-            // influences
-            case 'influence':                
-                loadPhoto(data, function(img){
-                    if (!influences){
-                        influences = $(tmpl('itemsTmpl', {type:type, title:'Influences'}));
-                        if (influenced){
-                            influences.insertBefore(influenced);
-                        }
-                        else {
-                            influences.appendTo(related);
-                        }
-                        influencesList = influences.find('ul');
-                    }
-                    item = $(tmpl('itemTmpl', {id:data.id, item:tmpl('itemSummaryTmpl', data)}));
-                    item.find('a').click(function(){
-                        api.currentSlug(api.urlSlug(data.dbUrl), false);
-                        api.person(data.dbUrl, function(data){
-                            display(data);
-                        });
-                        return false;
-                    });
-                    influencesList.append(item);
-                    insertImg(img, data.id);
-                });
-            break;
-            
-            
-            // influenced
-            case 'influenced':
-                loadPhoto(data, function(img){
-                    if (!influenced){
-                        influenced = $(tmpl('itemsTmpl', {type:type, title:'Influenced'}))
-                            .appendTo(related);
-                        influencedList = influenced.find('ul');
-                    }
-                    item = $(tmpl('itemTmpl', {id:data.id, item:tmpl('itemSummaryTmpl', data)}));
-                    item.find('a').click(function(){
-                        api.currentSlug(api.urlSlug(data.dbUrl), false);
-                        api.person(data.dbUrl, function(data){
-                            display(data);
-                        });
-                        return false;
-                    });
-                    influencedList.append(item);
-                    insertImg(img, data.id);
-                });
-            break;
-        }
-               
-        resetSidebarHeight();
-    }
-    
-    // search box behaviour
-    s.focus(function(){
-        s.val('');
-    })
-    .blur(function(){
-        var val = s.val();
-        s.val(val ? val : s.attr('title'));
-    })
-    .parent('form').submit(function(){
-        api.keyword(s.val(), function(data){
-            api.currentSlug(api.urlSlug(data.dbUrl), false);
-            display(data);
-        });
-        return false;
-    });
-    
-    jQuery(window).bind('slugchange', function(ev, slug){
-        api.slug(slug, display);
-    });
-    
-    
-        
-    prev.click(function(){
-        api.prevSlug();
-    });
-    next.click(function(){
-        api.nextSlug();
-    });
-    
-    // initialise
-    resetSidebarHeight();
-    api.init(theDefault);
-	</script>
+    <script>
+        var theDefault = 'Isaac_Newton';
+        // revolutionaries.init(theDefault);
+    </script>
 	
 	<!-- end scripts -->
 	

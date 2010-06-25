@@ -49,26 +49,17 @@ img {
 	    color:#fff;
 	}
 	
-	#sidebar blockquote {
-	    padding:0 20px 20px;
-	}
-	
-	#sidebar blockquote a {
-	    color:#fff;
-	    font-style:italic;
-	    text-decoration:none;
-	    border-bottom:1px solid #5c0000;
-	}
-	
-	#sidebar blockquote a:hover {
-	    border-color:#fff;
+	#sidebar .report {
+	    visibility:hidden;
+        padding:0 20px 20px;
+        height:1em;
 	}
 
 	.search {
 		width: 190px;
 		background: none;
 		padding: 10px;
-		margin: 40px 20px 20px 20px;
+		margin: 20px 20px 20px 20px;
 		font-family: 'Palatino','Baskerville','Georgia',serif;
 		font-size: 16px;
 		color: #fff;
@@ -96,54 +87,109 @@ img {
 	    color: #fff;
 	}
 	
-	#history {
+	#sidebar .history {
+	    display:none; /*temp*/
+	}
+	
+	.history {
 		margin-top: 100px;
 		padding: 20px;
 	}
 	
-	#history li {
+	.history li {
 		width: 100px;
 		font-style: italic;
 		display:none;
 	}
 	
-	#history li.previous {
+	.history li.previous {
 		float: left;
 	}
 	
-	#history li.next {
+	.history li.next {
 		float: right;
 		text-align: right;
 	}
 	
-	#history li.active {
+	.history li.active {
 	    display:block;
 	}
 	
-	#history li:hover {
+	.history li:hover {
 	    text-decoration:underline;
 	    cursor:pointer;
 	}
 	
+.about {
+    display:none;
+}
+	
+#sidebar .about {
+    margin:40px 0 20px;
+    padding:0 20px;
+}
+
+    #sidebar .about h2 {
+        font-weight:bold;
+        font-style:italic;
+        font-size:1.62em;
+        padding-bottom:5px;
+    }
+    
+    #sidebar .about h2 a {
+        text-decoration:none;
+    }
+    
+    #content .about .get-started img {
+        padding:5px;
+        border:1px solid #ccc;
+        opacity:0.9;
+        background-color:#000;
+        vertical-align:bottom;
+    }
+    
+    #content .about .get-started a:hover img {
+        border-color:#fff;
+        opacity:1;
+    }
+	
+	
+
+#the-default {
+    position:absolute;
+    bottom:30px;
+    padding:0 20px 20px;
+}
+    #the-default a {
+	    color:#fff;
+	    font-style:italic;
+	    text-decoration:none;
+	    border-bottom:1px solid #5c0000;
+	}
+	
+	#the-default a:hover {
+	    border-color:#fff;
+	}
+	
 	
 #content {
-	padding: 60px 60px 60px 310px;
-	background: rgba(0,0,0,0.5);
+	padding: 60px 60px 20px 310px;
+	background: rgba(0,0,0,0.62);
 	overflow: hidden;
 }
 
-	#revolutionary h2 {
+	#content h2 {
 		font-size: 42px;
 		font-style: italic;
 		font-weight: bold;
 		margin-bottom: 30px;
 	}
 	
-	#revolutionary h2 a {
+	#content h2 a {
 	    color:#fff;
 	}
 	
-	#revolutionary img {
+	#about img, #revolutionary img {
 	    height:500px;
 	}
 	
@@ -156,15 +202,55 @@ img {
 		margin-top: 40px;
 	}
 	
-	#revolutionary .abstract p {
+    #content .about a {
+        color:#f14141;
+    }
+	
+    #content .about a:hover {
+        background-color:#810101;
+        color:#fff;
+    }
+	
+	#content .about p, #revolutionary .abstract p {
 		font-size:1.62em;
 		line-height:1.62em;
 		margin-bottom: 20px;
 	}
+	
+	#content .about p.icons img {
+	    margin:5px;
+	    padding:5px;
+	    background-color:#fff;
+	    height:80px;
+	}
+	
+	#content h4 {
+		font-weight: bold;
+	}
+	
+	#content h4 a {
+		color: #fff;
+		text-decoration:none;
+	}
+	
 	#revolutionary .abstract .moreless {
 	    font-weight:bold;
 	    font-style:italic;
 	    margin-left:1em;
+	}
+	
+	#revolutionary .history {
+	    padding:0;
+	    margin:10px 0 20px;
+	    overflow:auto;
+	}
+	
+	#revolutionary .history li {
+	    padding:0;
+	    margin:0 2em 0 0;
+	    float:left;
+	    width:auto;
+	    font-size:1.38em;
 	}
 	
 	#related div ul {
@@ -174,15 +260,6 @@ img {
 	#related div li {
 		float: left;
 		margin: 0 20px 20px 0;
-	}
-	
-	#related div li h4 {
-		font-weight: bold;
-	}
-	
-	#related div li h4 a {
-		color: #fff;
-		text-decoration:none;
 	}
 	
 	#related div li:hover h4 a {
