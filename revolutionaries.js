@@ -288,20 +288,7 @@ var revolutionaries = (function(){
         var thumbSize = 100;
     
         return dbpediaSparql(
-            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                \
-                SELECT ?name, ?depiction, ?thumbnail, ?influences, ?abstract\
-                \
-                WHERE {\
-                <' + dbpediaUrl + '> rdfs:label ?name;\
-                    foaf:depiction ?depiction ;\
-                    <http://dbpedia.org/ontology/thumbnail> ?thumbnail;\
-                    <http://dbpedia.org/ontology/abstract> ?abstract.\
-                \
-                FILTER langMatches( lang(?name), "EN" ) .\
-                FILTER langMatches( lang(?abstract), "EN" ) .\
-            }',
+            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?name, ?depiction, ?thumbnail, ?influences, ?abstract WHERE { <' + dbpediaUrl + '> rdfs:label ?name; foaf:depiction ?depiction ; <http://dbpedia.org/ontology/thumbnail> ?thumbnail; <http://dbpedia.org/ontology/abstract> ?abstract. FILTER langMatches( lang(?name), "EN" ) . FILTER langMatches( lang(?abstract), "EN" ) . }',
             
             function(data){
                 callback({
@@ -321,20 +308,7 @@ var revolutionaries = (function(){
     // Those who have been influences for the person (i.e. those who have influenced the person)
     function influences(dbpediaUrl, callback, options){
         return dbpediaSparql(
-            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                \
-                SELECT ?influenced, ?name\
-                WHERE {\
-                ?influenced \
-                <http://dbpedia.org/property/influenced>\
-                <' + dbpediaUrl + '> .\
-                OPTIONAL {\
-                ?influenced foaf:name ?name .\
-                }\
-                \
-                FILTER langMatches( lang(?name), "EN" ) .\
-            }',
+            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?influenced, ?name WHERE { ?influenced <http://dbpedia.org/property/influenced> <' + dbpediaUrl + '> . OPTIONAL { ?influenced foaf:name ?name . } FILTER langMatches( lang(?name), "EN" ) . }',
             
             function(items){
                 var urls = {};
@@ -366,20 +340,7 @@ var revolutionaries = (function(){
     // Those who have been influenced by the person (i.e. those who the person has been an influence)
     function influenced(dbpediaUrl, callback){
         return dbpediaSparql(
-            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                \
-                SELECT DISTINCT ?influence, ?name\
-                WHERE {\
-                ?influence\
-                <http://dbpedia.org/property/influences>\
-                <' + dbpediaUrl + '> .\
-                OPTIONAL {\
-                ?influence foaf:name ?name .\
-                }\
-                \
-                FILTER langMatches( lang(?name), "EN" ) .\
-            }',
+            'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?influence, ?name WHERE { ?influence <http://dbpedia.org/property/influences> <' + dbpediaUrl + '> . OPTIONAL { ?influence foaf:name ?name . } FILTER langMatches( lang(?name), "EN" ) . }',
             
             function(items){
                 var urls = {};
