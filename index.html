@@ -9,7 +9,7 @@
 
 <body>
     <div id="sidebar">
-        <h1><a href="index.html">The Revolutionaries</a></h1>        
+        <h1><a href="http://dharmafly.com/revolutionaries/">The Revolutionaries</a></h1>        
         <p class="report"></p>
         
         <blockquote id="the-default">
@@ -34,7 +34,7 @@
 	<div id="content">
 	    <div class="about">
 	        <h2>About</h2>
-	        <p><strong><em><a href="http://dharmafly.com/revolutionaries">"The Revolutionaries"</a></em></strong> is an explorer of the influence and relationships between different scientists, inventors and revolutionary thinkers. It was built in 24 hours at <a href="http://sciencehackday.com">Science Hack Day</a>, in June 2010 (and then improved a fair bit, after the event).</p>
+	        <p><strong><em><a href="http://dharmafly.com/revolutionaries/">"The Revolutionaries"</a></em></strong> is an explorer of the influence and relationships between different scientists, inventors and revolutionary thinkers. It was built in 24 hours at <a href="http://sciencehackday.com">Science Hack Day</a>, in June 2010 (and then improved a fair bit, after the event).</p>
 	        
 	        <p>The original idea was to help visualise how we arrive at great inventions, and how ideas evolve over time. For example, something like the <a href="#Space_Shuttle">space shuttle</a> is the result of countless generations of converging technologies, and all the thought processes and theorems behind them.</p>
 	        	        
@@ -67,6 +67,9 @@
 	        
 	        <h3>A prototype</h3>
 	        <p>This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again. We'll be open-sourcing the code shortly.</p>
+	        
+	        <h3>We won a bug</h3>
+	        <p>The hack won the "You know, for kids" award - for which we took home a prestigious, jittery electric bug! <a href="http://sciencehackday.pbworks.com/hacks">See all the other hacks...</a></p>
 	    </div>
 	
 	    <div id="revolutionary"></div>
@@ -128,12 +131,21 @@
     <script src="console.js"></script>
     <script src="jquery.js"></script>
     <script src="revolutionaries.js"></script>
-    <script>
-        var theDefault = 'Isaac_Newton';
-        // revolutionaries.init(theDefault);
-    </script>
 	
 	<!-- end scripts -->
+
+
+	<script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2150808-7']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 	
 </body>
 </html>
