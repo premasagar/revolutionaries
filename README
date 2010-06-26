@@ -37,4 +37,4 @@ A prototype
 This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again. We'll be open-sourcing the code shortly.
 We won a bug
 
-The hack won the "You know, for kids" award - for which we took home a prestigious, jittery electric bug! See all the other hacks...
+The hack won the "You know, for kids" award - for which we took home a prestigious, jittery electric bug!
