@@ -1,0 +1,40 @@
+"The Revolutionaries"
+=====================
+
+"The Revolutionaries" is an explorer of the influence and relationships between different scientists, inventors and revolutionary thinkers. It was built in 24 hours at Science Hack Day, in June 2010 (and then improved a fair bit, after the event).
+
+The original idea was to help visualise how we arrive at great inventions, and how ideas evolve over time. For example, something like the space shuttle is the result of countless generations of converging technologies, and all the thought processes and theorems behind them.
+
+
+Links
+=====
+
+Live site: http://dharmafly.com/revolutionaries/
+Source code: http://github.com/premasagar/revolutionaries
+
+
+Who built it?
+=============
+
+@premasagar, @mia_out and @ironyboy - (with @tommorris, @goodonpaper, @yaili & @rboulton).
+
+
+Technical details
+=================
+
+The application does not have its own server. Instead, it uses JavaScript to request data from Wikipedia. It does this via SPARQL queries into the DBpedia API, all wrapped in calls to Yahoo's YQL web service. Plus a couple of other little tricks, like passing any keywords in the Search box through Google, to find the top result in Wikipedia for that term.
+Browser caching
+
+In order to speed up the browsing experience and to reduce the number of API calls, the app takes advantage of localStorage, which is like a simple database contained within the browser. If you are using a modern browser, you should find that previously viewed people display very fast.
+
+
+The Science Museum Collection
+=============================
+
+We began to integrate the Science Museum's collections database, to let us shift the context from the scientists to the technologies they invented, but this work hasn't been completed.
+A prototype
+
+This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again. We'll be open-sourcing the code shortly.
+We won a bug
+
+The hack won the "You know, for kids" award - for which we took home a prestigious, jittery electric bug! See all the other hacks...
