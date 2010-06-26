@@ -8,6 +8,9 @@
 </head>
 
 <body>
+    
+    <!-- end sidebar -->
+    
     <div id="sidebar">
         <h1><a href="http://dharmafly.com/revolutionaries/">The Revolutionaries</a></h1>        
         <p class="report"></p>
@@ -27,6 +30,10 @@
             <li class="next">Next &rarr;</li>
         </ul>
     </div>
+    
+    <!-- end sidebar -->
+    
+    
 	
 	
 	<!-- content -->
@@ -47,7 +54,7 @@
 	        <h3>Who built it?</h3>
 	        <p><a href="http://twitter.com/premasagar">@premasagar</a>, <a href="http://twitter.com/mia_out">@mia_out</a> and <a href="http://twitter.com/ironyboy">@ironyboy</a> - (with <a href="http://twitter.com/tommorris">@tommorris</a>, <a href="http://twitter.com/goodonpaper">@goodonpaper</a>, <a href="http://twitter.com/yaili">@yaili</a> & <a href="http://twitter.com/rboulton">@rboulton</a>).</p>
 	        
-	        <p>If you have any feedback, please let us know.</p>
+	        <p>The code is <em>open source</em> and <a href=http://github.com/premasagar/revolutionaries title="The Revolutionaries, on GitHub">available on GitHub.</a> If you have any feedback or improvements, please let us know.</p>
 	        
 	        <p class="icons">
 	            <a title="Science Hack Day" href="http://sciencehackday.com"><img src="img/scihack.png" alt="Science Hack Day"></a>
@@ -57,7 +64,7 @@
 	        </p>
 	        
 	        <h3>Technical details</h3>
-	        <p>The application does not have its own server. Instead, it uses JavaScript to request data from <a href="http://en.wikipedia.org">Wikipedia</a>. It does this via <a href="http://en.wikipedia.org/wiki/SPARQL">SPARQL queries</a> into the <a href="http://dbpedia.org">DBpedia</a> API, all wrapped in calls to Yahoo's <a href="http://developer.yahoo.com/yql/">YQL</a> web service. Plus a couple of other little tricks, like passing any keywords in the Search box through Google, to find the top result in Wikipedia for that term.</p>
+	        <p>The application does not have its own server. Instead, it uses JavaScript to request data from <a href="http://en.wikipedia.org">Wikipedia</a>. It does this via <a href="http://en.wikipedia.org/wiki/SPARQL">SPARQL queries</a> into the <a href="http://dbpedia.org">DBpedia</a> API, which lets us pull together information from DBpedia's <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">RDF linked data</a>, such as which person has influenced which other people. This is then wrapped in calls to Yahoo's <a href="http://developer.yahoo.com/yql/">YQL</a> web service. We also use a couple of other little tricks, like passing any keywords in the Search box through Google, to find the top result in Wikipedia for that term.</p>
 	        
 	        <h3>Browser caching</h3>
 	        <p>In order to speed up the browsing experience and to reduce the number of API calls, the app takes advantage of <a href="http://hacks.mozilla.org/2009/06/localstorage/">localStorage</a>, which is like a simple database contained within the browser. If you are using a modern browser, you should find that previously viewed people display very fast.</p>
@@ -66,7 +73,7 @@
 	        <p>We began to integrate the <a href="http://collectionsonline.nmsi.ac.uk">Science Museum's collections database</a>, to let us shift the context from the scientists to the technologies they invented, but this work hasn't been completed.</p>
 	        
 	        <h3>A prototype</h3>
-	        <p>This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again. We'll be open-sourcing the code shortly.</p>
+	        <p>This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again.</p>
 	        
 	        <h3>We won a bug</h3>
 	        <p>The hack won the "You know, for kids" award - for which we took home a prestigious, jittery electric bug! <a href="http://sciencehackday.pbworks.com/hacks">See all the other hacks...</a></p>
@@ -75,6 +82,8 @@
 	    <div id="revolutionary"></div>
 	    <div id="related"></div>
 	</div>
+	
+	<a href=http://github.com/premasagar/revolutionaries title="The Revolutionaries, on GitHub"><img style="position: absolute; top: 0; right: 0; border: 0;" src=http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png alt="Fork me on GitHub" /></a>
 	
 	<!-- end content -->
 	
@@ -130,7 +139,7 @@
     
     <script src="console.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script src="revolutionaries.js"></script>
+    <script src="revolutionaries.js?v=20100625"></script>
 	
 	<!-- end scripts -->
 

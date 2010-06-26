@@ -1,5 +1,19 @@
-/* Revolutionaries: http://dharmfly.com/revolutionaries */
-/* JavaScript by @premasagar */
+'use strict';
+
+/*!
+* The Revolutionaries
+*   dharmfly.com/revolutionaries
+*   github.com/premasagar/revolutionaries
+*
+*//*
+    JavaScript by @premasagar
+
+    license
+        opensource.org/licenses/mit-license.php
+        
+    v0.1
+
+*/
 
 var revolutionaries = (function(){
 
@@ -11,125 +25,6 @@ var revolutionaries = (function(){
         _ = window._,
         tmpl,
         api;
-        
-        
-    // WINDOW.LOCATION && DB/WIKIPEDIA SLUGS
-        
-    function triggerSlugChange(slug){
-        jQuery(window).trigger('slugchange', slug);
-    }
-    
-    function slugHistory(index){
-        if (jQuery.isArray(index)){
-            return slugHistoryCache;
-        }
-        if (typeof index !== 'number'){
-            index = slugCurrent;
-        }
-        return index === -1 ?
-            slugHistoryCache[slugHistoryCache.length - 1] :
-            slugHistoryCache[index];
-    }
-    
-    function currentSlug(newSlug, trigger){
-        var index;
-        
-        if (typeof newSlug === 'undefined'){
-            return window.location.hash.slice(1);
-        }
-        if (typeof newSlug === 'number'){
-            index = newSlug;
-            newSlug = slugHistory(index);
-            if (newSlug){
-               slugCurrent = index;
-            }
-            else {
-                return;
-            }
-        }
-        else if (typeof newSlug === 'string' && newSlug !== slugHistory()){
-            if (slugCurrent !== -1 && slugCurrent !== (slugHistoryCache.length -1)){
-                slugHistoryCache = slugHistoryCache.slice(0, slugCurrent + 1);
-            }
-            slugHistoryCache.push(newSlug);
-            slugCurrent = -1;
-        }
-        window.location.hash = '#' + newSlug;
-        if (trigger !== false){
-            triggerSlugChange(newSlug);
-        }        
-    }
-    
-    function isPrev(){
-        return slugCurrent === -1 ?
-            slugHistoryCache.length > 1 :
-            !!slugCurrent;
-    }
-        
-    function isNext(){
-        return slugCurrent !== -1 && slugCurrent < slugHistoryCache.length - 1;
-    }
-    
-    function prevSlug(){
-        var last = slugHistoryCache.length - 1,
-            newIndex = slugCurrent;
-            
-        if (isPrev()){
-            newIndex = (slugCurrent === - 1 ? last : slugCurrent) - 1;
-            currentSlug(newIndex);
-        }
-    }
-    
-    function nextSlug(){
-        if (isNext()){
-            slugCurrent = slugCurrent + 1;
-            currentSlug(newIndex);
-        }
-    }
-    
-    function monitorSlug(){
-        function detectSlugChange(){
-            var slug = currentSlug();
-            if (slug && slugHistory() !== slug){
-                currentSlug(slug.replace(/[+ ]/, '_'));
-            }
-        }
-        detectSlugChange();
-        window.setInterval(detectSlugChange, monitorFreq);
-    }
-    
-    
-    // PROSE
-    
-    // split a string into sentences
-    function sentences(txt, spliceStart, spliceEnd){
-        spliceStart = spliceStart || 0;
-    
-        var delim = '@@R@E@V@O~L~U~T~I~O@N@A@R@Y@',
-            s = jQuery.trim(txt)
-                .replace(/\.\s+/g, '.' + delim)
-                .split(delim),
-            len = s.length;
-
-        s[len-1].replace(/(?!\.)$/, '.');
-        spliceEnd = typeof spliceEnd === 'number' ? spliceEnd : len;
-        return s.slice(spliceStart, spliceEnd);
-    }
-
-    // select a number of sentences from a paragraph
-    /* e.g.
-        paragraph('mary had. a little lamb. its fleecy as white as snowy. white and the seven', 1, 3);
-    */
-    function paragraph(txtOrSentences, spliceStart, spliceEnd){
-        if (typeof txtOrSentences === 'string'){
-            return paragraph(sentences(txtOrSentences, spliceStart, spliceEnd));
-        }
-        else {
-            return txtOrSentences
-                .join(' ');
-        }
-    }
-    
     
     
     // CACHE
@@ -171,8 +66,8 @@ var revolutionaries = (function(){
             });
         }
     }
-    
-    
+        
+        
     // YQL & SPARQL    
     
     function yqlUrl(query){
@@ -372,6 +267,126 @@ var revolutionaries = (function(){
     }
     
     
+    // PROSE
+    
+    // split a string into sentences
+    function sentences(txt, spliceStart, spliceEnd){
+        spliceStart = spliceStart || 0;
+    
+        var delim = '@@R@E@V@O~L~U~T~I~O@N@A@R@Y@',
+            s = jQuery.trim(txt)
+                .replace(/\.\s+/g, '.' + delim)
+                .split(delim),
+            len = s.length;
+
+        s[len-1].replace(/(?!\.)$/, '.');
+        spliceEnd = typeof spliceEnd === 'number' ? spliceEnd : len;
+        return s.slice(spliceStart, spliceEnd);
+    }
+
+    // select a number of sentences from a paragraph
+    /* e.g.
+        paragraph('mary had. a little lamb. its fleecy as white as snowy. white and the seven', 1, 3);
+    */
+    function paragraph(txtOrSentences, spliceStart, spliceEnd){
+        if (typeof txtOrSentences === 'string'){
+            return paragraph(sentences(txtOrSentences, spliceStart, spliceEnd));
+        }
+        else {
+            return txtOrSentences
+                .join(' ');
+        }
+    }
+    
+    
+    
+    // WINDOW.LOCATION && DB/WIKIPEDIA SLUGS
+    // TODO: This is implemented a little haphazardly. Could do with refactoring.
+        
+    function triggerSlugChange(slug){
+        jQuery(window).trigger('slugchange', slug);
+    }
+    
+    function slugHistory(index){
+        if (jQuery.isArray(index)){
+            return slugHistoryCache;
+        }
+        if (typeof index !== 'number'){
+            index = slugCurrent;
+        }
+        return index === -1 ?
+            slugHistoryCache[slugHistoryCache.length - 1] :
+            slugHistoryCache[index];
+    }
+    
+    function currentSlug(newSlug, trigger){
+        var index;
+        
+        if (typeof newSlug === 'undefined'){
+            return window.location.hash.slice(1);
+        }
+        if (typeof newSlug === 'number'){
+            index = newSlug;
+            newSlug = slugHistory(index);
+            if (newSlug){
+               slugCurrent = index;
+            }
+            else {
+                return;
+            }
+        }
+        else if (typeof newSlug === 'string' && newSlug !== slugHistory()){
+            if (slugCurrent !== -1 && slugCurrent !== (slugHistoryCache.length -1)){
+                slugHistoryCache = slugHistoryCache.slice(0, slugCurrent + 1);
+            }
+            slugHistoryCache.push(newSlug);
+            slugCurrent = -1;
+        }
+        window.location.hash = '#' + newSlug;
+        if (trigger !== false){
+            triggerSlugChange(newSlug);
+        }        
+    }
+    
+    function isPrev(){
+        return slugCurrent === -1 ?
+            slugHistoryCache.length > 1 :
+            !!slugCurrent;
+    }
+        
+    function isNext(){
+        return slugCurrent !== -1 && slugCurrent < slugHistoryCache.length - 1;
+    }
+    
+    function prevSlug(){
+        var last = slugHistoryCache.length - 1,
+            newIndex = slugCurrent;
+            
+        if (isPrev()){
+            newIndex = (slugCurrent === - 1 ? last : slugCurrent) - 1;
+            currentSlug(newIndex);
+        }
+    }
+    
+    function nextSlug(){
+        if (isNext()){
+            slugCurrent = slugCurrent + 1;
+            currentSlug(slugCurrent);
+        }
+    }
+    
+    function monitorSlug(){
+        function detectSlugChange(){
+            var slug = currentSlug();
+            if (slug && slugHistory() !== slug){
+                currentSlug(slug.replace(/[+ ]/, '_'));
+            }
+        }
+        detectSlugChange();
+        window.setInterval(detectSlugChange, monitorFreq);
+    }
+    
+    
     // MICRO-TEMPLATING
     
     // Tmpl, by John Resig - http://ejohn.org/ - MIT Licensed
@@ -411,6 +426,7 @@ var revolutionaries = (function(){
     
     
     // REVOLUTIONARIES API
+    // TODO: Consolidate these methods, renaming, refactoring.
     
     api = {
         slug: function(slug, callback){
@@ -487,6 +503,7 @@ var revolutionaries = (function(){
 //////////////////////////////////
 
 // DISPLAY
+// TODO: Some of this is implemented in a bit of a haphazard way. Could do with a smoother logical flow.
 
 (function(){
     var api = revolutionaries,
