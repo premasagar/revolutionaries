@@ -523,16 +523,6 @@ var revolutionaries = (function(){
         about = jQuery('.about', content),
         tmpl = revolutionaries.tmpl,
         influences, influencesList, influenced, influencedList;
-        
-    
-    // sidebar height
-    function resetSidebarHeight(){
-        var wh = win.height(),
-            bh = body.height(),
-            ch = content.height();
-        
-        side.height(Math.max(wh, bh, ch));
-    }
     
     // reset DOM
     function clear(){
@@ -540,13 +530,11 @@ var revolutionaries = (function(){
         related.empty();
         influences = null;    
         influenced = null;
-        resetSidebarHeight();
     }
     
     function insertImg(img, id, container){
         container = container || body;      
         jQuery(img).appendTo('.' + id + ' .photo-container', container);
-        resetSidebarHeight();
     }
     
     function loadPhoto(data, callback, large){
@@ -707,8 +695,6 @@ var revolutionaries = (function(){
                 });
             break;
         }
-               
-        resetSidebarHeight();
     }
     
     // search box behaviour
@@ -746,6 +732,5 @@ var revolutionaries = (function(){
     if (!api.currentSlug()){
         about.show();
     }
-    resetSidebarHeight();
     api.init();
 }());
