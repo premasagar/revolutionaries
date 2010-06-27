@@ -211,7 +211,7 @@ img {
         color:#fff;
     }
 	
-	#content .about p, #revolutionary .abstract p {
+	#content .about ul, #content .about p, #revolutionary .abstract p {
 		font-size:1.62em;
 		line-height:1.62em;
 		margin-bottom: 20px;

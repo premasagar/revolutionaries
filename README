@@ -15,8 +15,23 @@ Source code: http://github.com/premasagar/revolutionaries
 
 Who built it?
 =============
+Twitter urls:
 
-@premasagar, @mia_out and @ironyboy - (with @tommorris, @goodonpaper, @yaili & @rboulton).
+@mia_out
+- original idea for exploring evolution of inventions over time; guidance on Science Museum data
+
+@premasagar
+- JavaScript, app creation, coordination
+
+@ironyboy
+- YQL'ing, R & D'ing
+
+@tommorris
+- SPARQL queries, DBpedia brains
+
+@yaili & @goodonpaper - midnight design kung fu
+
+@rboulton - R & D in scraping Science Museum collection to make an API
 
 
 Technical details
