@@ -368,7 +368,7 @@ _ = window._ = (function(){
     
         var delim = '@@R@E@V@O~L~U~T~I~O@N@A@R@Y@',
             s = jQuery.trim(txt)
-                .replace(/\.\s+/g, '.' + delim)
+                .replace(/(\w\w\w)\.\s+/g, '$1.' + delim) // HACK: we look for at least three characters at the end of a sentence to prevent breaking sentences apart after initials in a name, or abbreviations like 'ca. 900BC'. But a more robust solution would be preferable.
                 .split(delim),
             len = s.length;
 
