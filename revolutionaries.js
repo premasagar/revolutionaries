@@ -30,7 +30,7 @@ var revolutionaries = (function(){
 
 // EXTERNAL LIBRARIES
 
-/*!
+/*
 * Console
 *   github.com/premasagar/mishmash/tree/master/console/
 *
@@ -289,7 +289,7 @@ _ = window._ = (function(){
                     name: data.name ? cleanupName(data.name.value) : '',
                     depiction: data.depiction ? data.depiction.value : '',
                     thumbnail: data.thumbnail ? wikimediaSize(data.thumbnail.value, thumbSize) : '',
-                    abstract: data.abstract ? data.abstract.value : ''
+                    desc: data['abstract'] ? data['abstract'].value : '' // the use of the reserved var 'abstract' would create error in YUI compressor
                 });
             }
         );
@@ -319,7 +319,7 @@ _ = window._ = (function(){
                         name: data.name ? cleanupName(data.name.value) : '',
                         depiction: data.depiction ? data.depiction.value : '',
                         thumbnail: data.thumbnail ? data.thumbnail.value : '',
-                        abstract: data.abstract ? data.abstract.value : ''
+                        desc: data['abstract'] ? data['abstract'].value : ''
                     };
                 });
                 callback(items);
@@ -351,7 +351,7 @@ _ = window._ = (function(){
                         name: data.name ? cleanupName(data.name.value) : '',
                         depiction: data.depiction ? data.depiction.value : '',
                         thumbnail: data.thumbnail ? data.thumbnail.value : '',
-                        abstract: data.abstract ? data.abstract.value : ''
+                        desc: data['abstract'] ? data['abstract'].value : ''
                     };
                 });
                 callback(items);
@@ -671,9 +671,9 @@ _ = window._ = (function(){
         );
     }
     
-    function summary(abstract, spliceStart, spliceEnd){
-        return tmpl('abstractParaTmpl', {
-            paragraph: api.paragraph(abstract, spliceStart, spliceEnd)
+    function summary(desc, spliceStart, spliceEnd){
+        return tmpl('descParaTmpl', {
+            paragraph: api.paragraph(desc, spliceStart, spliceEnd)
         });
     }
     
@@ -704,7 +704,7 @@ _ = window._ = (function(){
     // update display
     function display(data){
         var type = data ? data.type : false,
-            item, abstract, moreless;
+            item, desc, moreless;
     
         // Route data to micro-templates
         switch(type){
@@ -717,20 +717,20 @@ _ = window._ = (function(){
                 
                 about.hide();
                 api.currentSlug(api.urlSlug(data.dbUrl), false);
-                moreless = jQuery(tmpl('abstractMoreLessTmpl', {moreless: 'More >'}))
+                moreless = jQuery(tmpl('descMoreLessTmpl', {moreless: 'More >'}))
                     .toggle(
                         function(){
-                            jQuery('.moreless', abstract)
+                            jQuery('.moreless', desc)
                                 .text('< Less');
-                            jQuery(summary(data.abstract, 1))
+                            jQuery(summary(data.desc, 1))
                                 .hide()
-                                .appendTo('.abstract')
+                                .appendTo('.desc')
                                 .slideDown('fast');
                         },
                         function(){
-                            jQuery('.moreless', abstract)
+                            jQuery('.moreless', desc)
                                 .text('More >');
-                            jQuery('.abstract p:not(:first)')
+                            jQuery('.desc p:not(:first)')
                                 .slideUp('fast', function(){
                                     jQuery(this).remove();
                                 });
@@ -739,10 +739,10 @@ _ = window._ = (function(){
             
                 clear();
                 report.css('visibility', 'hidden');
-                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {abstract:summary(data.abstract, 0, 1)})));
+                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {desc:summary(data.desc, 0, 1)})));
                 
-                if (api.sentences(data.abstract).length > 1){
-                    jQuery('.abstract p:last', revolutionary)
+                if (api.sentences(data.desc).length > 1){
+                    jQuery('.desc p:last', revolutionary)
                         .append(moreless);
                 }
                     

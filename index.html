@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>The Revolutionaries</title>
-    <link href="css/reset.css" rel="stylesheet" type="text/css">
-	<link href="css/style.css?v=20100628" rel="stylesheet" type="text/css">
+	<link href="css/style.min.css?v=20100628-3" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -108,11 +107,11 @@
 	
 	<!-- templates -->
 	
-	<script type="text/template" id="abstractParaTmpl">
+	<script type="text/template" id="descParaTmpl">
 	    <p><%= paragraph %></p>
 	</script>
 	
-	<script type="text/template" id="abstractMoreLessTmpl">
+	<script type="text/template" id="descMoreLessTmpl">
 	    <a class="moreless"><%= moreless %></a> 
 	</script>
 	
@@ -123,7 +122,7 @@
                 <li class="previous">&larr; Previous</li>
                 <li class="next">Next &rarr;</li>
             </ul>
-            <div class="abstract"><%= abstract %></div>
+            <div class="desc"><%= desc %></div>
 	        <p><a class="photo-container" href="<%= url %>" title="<%= name %>"></a></p>
         </div>
 	</script>
@@ -154,7 +153,7 @@
 	<!-- scripts -->
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script src="revolutionaries.js?v=20100628-2"></script>
+    <script src="revolutionaries.min.js?v=20100628-3"></script>
 	
 	<!-- end scripts -->
 
