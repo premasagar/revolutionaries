@@ -117,23 +117,31 @@ _ = window._ = (function(){
     // localStorage wrapper
     function cache(key, value){
         var ns = 'revolutionaries',
-            localStorage = window.localStorage,
+            localStorage,
+            JSON;
+            
+        try {
+            localStorage = window.localStorage;
             JSON = window.JSON;
         
-        if (!localStorage || !JSON){
-            _(!!localStorage, !!JSON);
+            if (!localStorage || !JSON){
+                return false;
+            }
+            key = ns + '.' + key;
+            if (typeof value === 'undefined'){
+                value = localStorage[key];
+                return value ? JSON.parse(value).v : value;
+            }
+            else {
+                localStorage[key] = JSON.stringify({
+                    v: value,
+                    t: new Date().getTime()
+                });
+            }
+        }
+        catch(e){
+            _('localStorage error: ', e);
             return false;
-        }
-        key = ns + '.' + key;
-        if (typeof value === 'undefined'){
-            value = localStorage[key];
-            return value ? JSON.parse(value).v : value;
-        }
-        else {
-            localStorage[key] = JSON.stringify({
-                v: value,
-                t: new Date().getTime()
-            });
         }
     }
     
@@ -618,8 +626,21 @@ _ = window._ = (function(){
     }
     
     function insertImg(img, id, container){
-        container = container || body;      
-        jQuery(img).appendTo('.' + id + ' .photo-container', container);
+        var h;
+        
+        img = jQuery(img);
+        container = jQuery('.' + id + ' .photo-container', container || body);
+        h = container.height();
+        
+        container
+            .css({
+                overflow: 'hidden',
+                height: h + 'px'
+            })
+            .append(img)
+            .animate({
+                height: h + img.outerHeight(true)
+            }, 'fast');
     }
     
     function loadPhoto(data, callback, large){

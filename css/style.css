@@ -176,9 +176,10 @@ img {
 	
 	
 #content {
-	padding: 60px 60px 20px 310px;
+	padding: 60px 60px 20px 60px;
 	background: rgba(0,0,0,0.62);
 	overflow: hidden;
+	border-left:250px solid #9f0101;
 }
 
 	#content h2 {
@@ -271,7 +272,7 @@ img {
 	
 	#related div li a.photo-container {
 	    display: block;
-	    height: 138px;
+	    max-height: 148px;
 	}
 	
 	#related div li img.photo {
