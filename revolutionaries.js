@@ -630,7 +630,8 @@ _ = window._ = (function(){
         
         img = jQuery(img);
         container = jQuery('.' + id + ' .photo-container', container || body);
-        h = container.height();
+        h = container.height(),
+        maxH = container.css('max-height');
         
         container
             .css({
@@ -640,7 +641,11 @@ _ = window._ = (function(){
             .append(img)
             .animate({
                 height: h + img.outerHeight(true)
-            }, 'fast');
+            }, 'fast', function(){
+                if (parseInt(maxH)){
+                    container.height(maxH);
+                }
+            });
     }
     
     function loadPhoto(data, callback, large){
