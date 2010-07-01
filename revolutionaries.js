@@ -537,10 +537,11 @@ _ = window._ = (function(){
             });
         },
         
-        person: function(url, callback){        
+        person: function(url, callback){
             if (url){
                 person(url, function(item){
                     item.type = 'revolutionary';
+                    _(item, callback);
                     callback(item);
                 });
                 
@@ -678,27 +679,27 @@ _ = window._ = (function(){
     }
     
     // navigation
-    function showhideNav(){
-        if (api.isPrev()){
-            prev.show();
-        }
-        else {
-            prev.hide();
-        }
-        if (api.isNext()){
-            next.show();
-        }
-        else {
-            next.hide();
-        }
-        
-        jQuery('#revolutionary .history .previous')
-            .replaceWith(prev.clone(true));            
-        
-        jQuery('#revolutionary .history .next')
-            .replaceWith(next.clone(true));
+    
+    function attachNavHandlers(container){
+        var nav = jQuery(this),
+            prev = nav.find('.previous'),
+            next = nav.find('.next');
+    
+        prev.click(function(){
+            api.prevSlug();
+        });
+        next.click(function(){
+            api.nextSlug();
+        });
+    }
+    
+    function showhideNav(dom){
+        var navs = jQuery('.history.nav', content),
+            prev = navs.find('.previous'),
+            next = nav.find('.next');
             
-        s.val(s.attr('title'));
+        prev[api.isPrev() ? 'show' : 'hide']();
+        next[api.isNext() ? 'show' : 'hide']();
     }
     
     // update display
@@ -739,7 +740,15 @@ _ = window._ = (function(){
             
                 clear();
                 report.css('visibility', 'hidden');
-                revolutionary.html(tmpl('itemDetailTmpl', jQuery.extend({}, data, {desc:summary(data.desc, 0, 1)})));
+                revolutionary.html(
+                    tmpl(
+                        'itemDetailTmpl',
+                        jQuery.extend({}, data, {
+                            desc: summary(data.desc, 0, 1),
+                            nav: tmpl('navTmpl', {})
+                        })
+                    )
+                );
                 
                 if (api.sentences(data.desc).length > 1){
                     jQuery('.desc p:last', revolutionary)
@@ -750,7 +759,10 @@ _ = window._ = (function(){
                     insertImg(img, data.id, revolutionary);
                 }, true);
                 
-                showhideNav(); 
+                showhideNav(revolutionary);
+                
+                // reset search text
+                s.val(s.attr('title'));
             break;
             
             
@@ -829,14 +841,6 @@ _ = window._ = (function(){
             .css('visibility', 'visible')
             .text('Loading...');
         api.slug(slug, display);
-    });   
-    
-        
-    prev.click(function(){
-        api.prevSlug();
-    });
-    next.click(function(){
-        api.nextSlug();
     });
     
     // initialise

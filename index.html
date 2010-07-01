@@ -40,16 +40,7 @@
 	<div id="content">
 	    <div class="about">
 	        <h2>About</h2>
-	        <p><strong><em><a href="http://dharmafly.com/revolutionaries/">"The Revolutionaries"</a></em></strong> is an explorer of the influence and relationships between different scientists, inventors and revolutionary thinkers. It was built in 24 hours at <a href="http://sciencehackday.com">Science Hack Day</a>, in June 2010 (and improved a fair bit, after the event).</p>
-	        
-	        <h3>The idea</h3>
-	        <p>The original idea was to help visualise how we arrive at great inventions, and how ideas evolve over time. For example, something like the <a href="#Space_Shuttle">space shuttle</a> is the result of countless generations of converging technologies, and all the thought processes and new paradigms behind them.</p>
-	        
-	        <h3>The data</h3>
-	        <p>None of the information in this tool is stored within it. It is dynamically driven by the crowd-sourced knowledge on WikiPedia, and how that data links to other information on the Web. Data is cached within your browser, to speed up navigation.</p>
-	        
-	        <h3>The code</h3>
-	        <p>The source code is free and <em>open source</em>, and <a href="http://github.com/premasagar/revolutionaries" title="The Revolutionaries, on GitHub">available on GitHub.</a> If you have any feedback or improvements, please let us know.</p>
+	        <p><strong><em><a href="http://dharmafly.com/revolutionaries/">"The Revolutionaries"</a></em></strong> is an explorer of the influence and relationships between different scientists, inventors and revolutionary thinkers. It was built in 24 hours at <a href="http://sciencehackday.com">Science Hack Day</a>, in June 2010 (and improved a fair bit, afterwards). There's a <a href="http://dharmafly.com/scihack">blog post about the app here</a>.</p>
 	        	        
 	        <h3>Start exploring here...</h3>
 	        <p class="get-started">
@@ -57,12 +48,21 @@
 	            <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/39/GodfreyKneller-IsaacNewton-1689.jpg/178px-GodfreyKneller-IsaacNewton-1689.jpg" width=178 height=244></a>
 	        </p>
 	        
+	        <h3>The idea</h3>
+	        <p>The original idea was to help visualise how we arrive at great inventions, and how ideas evolve over time. For example, something like the <a href="#Space_Shuttle">space shuttle</a> is the result of countless generations of converging technologies, and all the thought processes and new paradigms behind them.</p>
+	        
+	        <h3>The data</h3>
+	        <p>None of the information in this tool is stored within it. It is dynamically driven, largely by the crowd-sourced knowledge on <a href="http://en.wikipedia.org">Wikipedia</a>. Data is then stored within your browser, to speed up navigation. Some of the technical details are <a href="http://dharmafly.com/scihack">explained in the blog post</a>.</p>
+	        
+	        <h3>The code</h3>
+	        <p>The source code is free and <em>open source</em>, and <a href="http://github.com/premasagar/revolutionaries" title="The Revolutionaries, on GitHub">available on GitHub.</a> If you have any feedback or improvements, please let us know.</p>
+	        
 	        <h3>Who built it?</h3>
 	        <ul>	            
 	            <li><a href="http://twitter.com/mia_out">@mia_out</a> - original idea for exploring evolution of inventions over time; guidance on Science Museum data</li>
 	            <li><a href="http://twitter.com/premasagar">@premasagar</a> - JavaScript, app creation, coordination</li>
 	            
-	            <li><a href="http://twitter.com/ironyboy">@ironyboy</a> - YQL'ing, R & D'ing</li>
+	            <li><a href="http://twitter.com/ironyboy">@ironyboy</a> - concept development, R & D'ing, YQL'ing</li>
 	            
 	            <li><a href="http://twitter.com/tommorris">@tommorris</a> - SPARQL queries, DBpedia brains</li>
 	            
@@ -78,17 +78,8 @@
 	            <a title="YQL" href="http://developer.yahoo.com/yql/"><img src="img/yql.gif" alt="YQL"></a>
 	        </p>
 	        
-	        <h3>Technical details</h3>
-	        <p>The application does not have its own server. Instead, it uses JavaScript to request data from <a href="http://en.wikipedia.org">Wikipedia</a>. It does this via <a href="http://en.wikipedia.org/wiki/SPARQL">SPARQL queries</a> into the <a href="http://dbpedia.org">DBpedia</a> API, which lets us pull together information from DBpedia's <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">RDF linked data</a>, such as which person has influenced which other people. This is then wrapped in calls to Yahoo's <a href="http://developer.yahoo.com/yql/">YQL</a> web service. We also use a couple of other little tricks, like passing any keywords in the Search box through Google, to find the top result in Wikipedia for that term.</p>
-	        
-	        <h3>Browser caching</h3>
-	        <p>In order to speed up the browsing experience and to reduce the number of API calls, the app takes advantage of <a href="http://hacks.mozilla.org/2009/06/localstorage/">localStorage</a>, which is like a simple database contained within the browser. If you are using a modern browser, you should find that previously viewed people display very fast.</p>
-	        
-	        <h3>The Science Museum Collection</h3>
-	        <p>We began to integrate the <a href="http://collectionsonline.nmsi.ac.uk">Science Museum's collections database</a>, to let us shift the context from the scientists to the technologies they invented, but this work hasn't been completed.</p>
-	        
-	        <h3>A prototype</h3>
-	        <p>This is a prototype, and it's nicely rough around the edges. It hasn't been properly cross-browser tested and it doesn't warn you when things go wrong. If, for example, the application suddenly stops displaying content, this may be due to limits from the YQL service - just wait an hour and try again.</p>
+	        <h3>It's just a prototype</h3>
+	        <p>The app hasn't been rigourously cross-browser tested, and it doesn't warn you when things go wrong. If, for example, you suddenly stop seeing new content, this may be due to limits from the YQL service - just wait an hour and try again.</p>
 	        
 	        <h3>We won a bug</h3>
 	        <p>The hack won the "You know, for kids" award - for which we took home a prestigious, jittery electric bug! <a href="http://sciencehackday.pbworks.com/hacks">See all the other hacks...</a></p>
@@ -115,15 +106,20 @@
 	    <a class="moreless"><%= moreless %></a> 
 	</script>
 	
+	<script type="text/template" id="navTmpl">
+	    <ul class="history nav">
+            <li class="previous">&larr; Previous</li>
+            <li class="next">Next &rarr;</li>
+        </ul>
+    </script>
+	
 	<script type="text/template" id="itemDetailTmpl">
 	    <div class="item-detail vcard <%= id %>">
 		    <h2><a class="fn url" href="<%= url %>" title="<%= name %>, on Wikipedia"><%= name %></a></h2>
-	        <ul class="history">
-                <li class="previous">&larr; Previous</li>
-                <li class="next">Next &rarr;</li>
-            </ul>
+	        <%= nav || "" %>
             <div class="desc"><%= desc %></div>
 	        <p><a class="photo-container" href="<%= url %>" title="<%= name %>, on Wikipedia"></a></p>
+	        <%= nav || "" %>
         </div>
 	</script>
 	
@@ -153,7 +149,7 @@
 	<!-- scripts -->
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script src="revolutionaries.min.js?v=20100628-3"></script>
+    <script src="revolutionaries.js?v=20100628-3"></script>
 	
 	<!-- end scripts -->
 
