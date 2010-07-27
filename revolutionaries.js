@@ -135,7 +135,7 @@ _ = window._ = (function(){
             else {
                 localStorage[key] = JSON.stringify({
                     v: value,
-                    t: new Date().getTime()
+                    t: (new Date()).getTime()
                 });
             }
         }
