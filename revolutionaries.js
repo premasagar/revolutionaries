@@ -681,7 +681,7 @@ _ = window._ = (function(){
     // navigation
     
     function attachNavHandlers(container){
-        var nav = jQuery(this),
+        var nav = jQuery(container),
             prev = nav.find('.previous'),
             next = nav.find('.next');
     
@@ -694,12 +694,14 @@ _ = window._ = (function(){
     }
     
     function showhideNav(dom){
-        var navs = jQuery('.history.nav', content),
-            prev = navs.find('.previous'),
-            next = navs.find('.next');
+        var nav = jQuery('.history.nav', content),
+            prev = nav.find('.previous'),
+            next = nav.find('.next');
             
         prev[api.isPrev() ? 'show' : 'hide']();
         next[api.isNext() ? 'show' : 'hide']();
+        
+        attachNavHandlers(dom);
     }
     
     // update display
