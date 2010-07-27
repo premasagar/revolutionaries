@@ -696,7 +696,7 @@ _ = window._ = (function(){
     function showhideNav(dom){
         var navs = jQuery('.history.nav', content),
             prev = navs.find('.previous'),
-            next = nav.find('.next');
+            next = navs.find('.next');
             
         prev[api.isPrev() ? 'show' : 'hide']();
         next[api.isNext() ? 'show' : 'hide']();
